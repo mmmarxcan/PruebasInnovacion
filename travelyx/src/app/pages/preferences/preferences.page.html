@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Preferencias</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-list>
+
+    <ion-item>
+      <ion-label>Tipo de comida</ion-label>
+      <ion-select [(ngModel)]="preferences.foodType" placeholder="Selecciona">
+        <ion-select-option value="mexicana">Mexicana</ion-select-option>
+        <ion-select-option value="mariscos">Mariscos</ion-select-option>
+        <ion-select-option value="italiana">Italiana</ion-select-option>
+        <ion-select-option value="rapida">Comida rápida</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Presupuesto</ion-label>
+      <ion-select [(ngModel)]="preferences.budget" placeholder="Selecciona">
+        <ion-select-option value="bajo">Bajo</ion-select-option>
+        <ion-select-option value="medio">Medio</ion-select-option>
+        <ion-select-option value="alto">Alto</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Tipo de lugar</ion-label>
+      <ion-select [(ngModel)]="preferences.placeType" placeholder="Selecciona">
+        <ion-select-option value="playa">Playa</ion-select-option>
+        <ion-select-option value="cultural">Cultural</ion-select-option>
+        <ion-select-option value="naturaleza">Naturaleza</ion-select-option>
+        <ion-select-option value="restaurante">Restaurante</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+  </ion-list>
+
+  <ion-button expand="block" (click)="savePreferences()">
+    Guardar preferencias
+  </ion-button>
+
+</ion-content>

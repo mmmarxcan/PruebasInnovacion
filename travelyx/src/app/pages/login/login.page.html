@@ -1,0 +1,37 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-item>
+    <ion-input
+      label="Email"
+      type="email"
+      [(ngModel)]="email"
+      placeholder="correo@ejemplo.com">
+    </ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-input
+      label="Contraseña"
+      type="password"
+      [(ngModel)]="password"
+      placeholder="******">
+    </ion-input>
+  </ion-item>
+
+  <ion-button expand="block" (click)="loginWithEmail()">
+    Iniciar sesión
+  </ion-button>
+
+  <div style="display: flex; justify-content: center; margin-top: 20px;">
+    <ion-fab-button color="light" (click)="loginWithGoogle()">
+      <img src="assets\icon\integrations-logo-google.webp" alt="Google" style="width: 34px; height: 34px;">
+    </ion-fab-button>
+  </div>
+
+</ion-content>
