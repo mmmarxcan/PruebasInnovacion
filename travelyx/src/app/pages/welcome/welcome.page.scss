@@ -1,0 +1,180 @@
+/* Welcome Page Styles */
+
+.welcome-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to bottom, var(--c-purple-50), #ffffff);
+    padding: 2rem;
+}
+
+.hero-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 4rem;
+
+    .octopus-container {
+        position: relative;
+        margin-bottom: 2rem;
+        width: 9rem;
+        height: 9rem;
+
+        .octopus-head {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--c-purple-500), var(--c-purple-600));
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.4);
+
+            .eyes {
+                display: flex;
+                gap: 1rem;
+                margin-bottom: 0.5rem;
+
+                .eye {
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    background: white;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    .pupil {
+                        width: 0.75rem;
+                        height: 0.75rem;
+                        background: var(--c-gray-800);
+                        border-radius: 50%;
+                    }
+                }
+            }
+
+            .smile {
+                width: 2.25rem;
+                height: 1.125rem;
+                border-bottom: 5px solid white;
+                border-radius: 0 0 50% 50%;
+            }
+        }
+
+        .tentacles {
+            position: absolute;
+            bottom: -0.75rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.25rem;
+            z-index: 1;
+
+            .tentacle {
+                width: 0.875rem;
+                height: 2.25rem;
+                background: linear-gradient(to bottom, var(--c-purple-600), var(--c-purple-500));
+                border-radius: 999px;
+                transform-origin: top center;
+                transform: rotate(calc((var(--i) - 3.5) * 8deg));
+            }
+        }
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--c-purple-700);
+        margin: 0 0 0.5rem;
+        letter-spacing: -0.025em;
+    }
+
+    p {
+        font-size: 1.125rem;
+        color: var(--c-gray-500);
+        margin: 0;
+        text-align: center;
+    }
+}
+
+.actions-section {
+    width: 100%;
+    max-width: 20rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    .btn-primary {
+        width: 100%;
+        background: linear-gradient(to right, var(--c-purple-500), var(--c-purple-600));
+        color: white;
+        padding: 1.125rem;
+        border-radius: 1.25rem;
+        font-weight: 600;
+        font-size: 1.125rem;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.3);
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+
+        &:hover {
+            box-shadow: 0 15px 20px -3px rgba(168, 85, 247, 0.4);
+            transform: translateY(-2px);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        color: var(--c-gray-400);
+        font-size: 0.875rem;
+
+        &::before,
+        &::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--c-gray-200);
+        }
+
+        span {
+            padding: 0 0.75rem;
+        }
+    }
+
+    .btn-secondary {
+        width: 100%;
+        background: white;
+        color: var(--c-gray-600);
+        padding: 0.875rem;
+        border-radius: 1rem;
+        font-weight: 500;
+        font-size: 0.9375rem;
+        border: 2px solid var(--c-gray-200);
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+
+        &:hover {
+            background: var(--c-gray-50);
+            border-color: var(--c-gray-300);
+            color: var(--c-gray-800);
+        }
+    }
+}

@@ -1,5 +1,234 @@
-ion-fab-button {
-  --background: white;
-  --color: #4285F4; /* Azul de Google */
-  border: 1px solid #ddd;
+/* Login Page Styles */
+
+.login-container {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to bottom, var(--c-emerald-50), #ffffff);
+}
+
+.header-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 4rem;
+  padding-bottom: 2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+
+  .logo-container {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 1.5rem;
+    background: linear-gradient(135deg, var(--c-emerald-500), var(--c-teal-600));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+
+    .logo-emoji {
+      font-size: 3rem;
+    }
+  }
+
+  h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--c-gray-800);
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: var(--c-gray-500);
+    text-align: center;
+    font-size: 1rem;
+    margin: 0;
+  }
+}
+
+.form-section {
+  flex: 1;
+  padding: 1.5rem 2rem;
+
+  .input-group {
+    margin-bottom: 1rem;
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--c-gray-700);
+      margin-bottom: 0.5rem;
+    }
+
+    .input-wrapper {
+      position: relative;
+
+      .input-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--c-gray-400);
+        font-size: 1.25rem;
+        pointer-events: none;
+      }
+
+      input {
+        width: 100%;
+        padding-left: 3rem;
+        padding-right: 1rem;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        border: 1px solid var(--c-gray-200);
+        border-radius: 1rem;
+        outline: none;
+        transition: all 0.2s;
+        background: white;
+        font-size: 1rem;
+
+        &:focus {
+          border-color: var(--c-emerald-500);
+          /* emerald-500 */
+          box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+        }
+      }
+
+      /* Password specific */
+      input[name="password"] {
+        padding-right: 3rem;
+      }
+
+      .eye-btn {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: var(--c-gray-400);
+        display: flex;
+        padding: 0;
+        cursor: pointer;
+
+        ion-icon {
+          font-size: 1.25rem;
+        }
+
+        &:hover {
+          color: var(--c-gray-600);
+        }
+      }
+    }
+  }
+
+  .forgot-password {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+
+    button {
+      background: none;
+      border: none;
+      color: var(--c-emerald-600);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .btn-primary {
+    width: 100%;
+    background: var(--c-button-gradient);
+    color: white;
+    padding: 1rem;
+    border-radius: 1rem;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+
+    &:hover {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      opacity: 0.95;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem 0;
+
+    .line {
+      flex: 1;
+      height: 1px;
+      background-color: var(--c-gray-200);
+    }
+
+    span {
+      font-size: 0.875rem;
+      color: var(--c-gray-400);
+    }
+  }
+
+  .btn-google {
+    width: 100%;
+    background: white;
+    border: 2px solid var(--c-gray-200);
+    padding: 1rem;
+    border-radius: 1rem;
+    font-weight: 600;
+    color: var(--c-gray-700);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: var(--c-gray-50);
+      border-color: var(--c-gray-300);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    ion-icon {
+      font-size: 1.25rem;
+    }
+  }
+
+  .register-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 1rem;
+    color: var(--c-gray-600);
+
+    button {
+      background: none;
+      border: none;
+      color: var(--c-emerald-600);
+      font-weight: 600;
+      cursor: pointer;
+      margin-left: 0.25rem;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 }

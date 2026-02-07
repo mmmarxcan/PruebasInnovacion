@@ -1,0 +1,72 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="goBack()">
+                <ion-icon name="arrow-back-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Estadísticas</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <div class="analytics-container">
+
+        <!-- Summary Cards Row -->
+        <div class="summary-row">
+            <div class="kpi-card purple">
+                <ion-icon name="trending-up-outline"></ion-icon>
+                <div class="kpi-value">1,240</div>
+                <div class="kpi-label">Vistas Totales</div>
+            </div>
+            <div class="kpi-card pink">
+                <ion-icon name="people-outline"></ion-icon>
+                <div class="kpi-value">85</div>
+                <div class="kpi-label">Nuevos Clientes</div>
+            </div>
+        </div>
+
+        <!-- Bar Chart Section -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>Vistas por Día</h3>
+                <p>Últimos 7 días</p>
+            </div>
+            <div class="bar-chart-container">
+                <div class="bar-group" *ngFor="let item of weeklyViews">
+                    <div class="bar-column">
+                        <div class="bar" [style.height]="getBarHeight(item.value)" [attr.data-value]="item.value"></div>
+                    </div>
+                    <div class="bar-label">{{ item.day }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Donut Chart & Info -->
+        <div class="metrics-grid">
+            <!-- Donut Chart -->
+            <div class="chart-card small">
+                <h3>Interacción</h3>
+                <div class="donut-chart-container">
+                    <div class="donut-chart" [style.--percentage]="interactionRate">
+                        <div class="donut-center">
+                            <span>{{ interactionRate }}%</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="chart-footer">Tasa de clicks</p>
+            </div>
+
+            <!-- Extra Info -->
+            <div class="chart-card small info">
+                <h3>Tiempo Promedio</h3>
+                <div class="big-stat">
+                    <ion-icon name="time-outline"></ion-icon>
+                    <span>2m 15s</span>
+                </div>
+                <p class="chart-footer">Por visita</p>
+            </div>
+        </div>
+
+    </div>
+</ion-content>

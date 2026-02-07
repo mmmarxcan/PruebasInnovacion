@@ -1,37 +1,72 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>login</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true">
+  <div class="login-container">
 
-<ion-content class="ion-padding">
+    <!-- Header with logo -->
+    <div class="header-section">
+      <div class="logo-container">
+        <span class="logo-emoji">🍽️</span>
+      </div>
+      <h1>Travelyx</h1>
+      <p>Descubre los mejores restaurantes en tu viaje</p>
+    </div>
 
-  <ion-item>
-    <ion-input
-      label="Email"
-      type="email"
-      [(ngModel)]="email"
-      placeholder="correo@ejemplo.com">
-    </ion-input>
-  </ion-item>
+    <!-- Form -->
+    <div class="form-section">
+      <form (ngSubmit)="loginWithEmail()">
 
-  <ion-item>
-    <ion-input
-      label="Contraseña"
-      type="password"
-      [(ngModel)]="password"
-      placeholder="******">
-    </ion-input>
-  </ion-item>
+        <!-- Email Input -->
+        <div class="input-group">
+          <label>Correo electrónico</label>
+          <div class="input-wrapper">
+            <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+            <input type="email" [(ngModel)]="email" name="email" placeholder="tu@email.com" required>
+          </div>
+        </div>
 
-  <ion-button expand="block" (click)="loginWithEmail()">
-    Iniciar sesión
-  </ion-button>
+        <!-- Password Input -->
+        <div class="input-group">
+          <label>Contraseña</label>
+          <div class="input-wrapper">
+            <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+            <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password"
+              placeholder="••••••••" required>
+            <button type="button" class="eye-btn" (click)="togglePasswordVisibility()">
+              <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            </button>
+          </div>
+        </div>
 
-  <div style="display: flex; justify-content: center; margin-top: 20px;">
-    <ion-fab-button color="light" (click)="loginWithGoogle()">
-      <img src="assets\icon\integrations-logo-google.webp" alt="Google" style="width: 34px; height: 34px;">
-    </ion-fab-button>
+        <!-- Forgot Password -->
+        <div class="forgot-password">
+          <button type="button">¿Olvidaste tu contraseña?</button>
+        </div>
+
+        <!-- Login Button -->
+        <button type="submit" class="btn-primary">
+          Iniciar sesión
+        </button>
+
+      </form>
+
+      <!-- Divider -->
+      <div class="divider">
+        <div class="line"></div>
+        <span>o continúa con</span>
+        <div class="line"></div>
+      </div>
+
+      <!-- Google Login -->
+      <button class="btn-google" (click)="loginWithGoogle()">
+        <ion-icon name="logo-google" style="color: #ea4335;"></ion-icon>
+        Continuar con Google
+      </button>
+
+      <!-- Register Link -->
+      <div class="register-link">
+        <span>¿No tienes cuenta? </span>
+        <button (click)="goToRegister()">Regístrate</button>
+      </div>
+
+    </div>
   </div>
-
 </ion-content>

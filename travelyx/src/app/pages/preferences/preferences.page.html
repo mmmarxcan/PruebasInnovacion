@@ -1,49 +1,116 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/login"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Preferencias</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true">
+  <div class="preferences-container">
 
-<ion-content class="ion-padding">
+    <!-- Header / Back Button -->
+    <div class="header-overlay">
+      <button class="btn-back" (click)="handleBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+    </div>
 
-  <ion-list>
+    <!-- Polly & Header Section -->
+    <div class="polly-section">
+      <!-- Octopus Character -->
+      <div class="octopus-container">
+        <div class="octopus-head">
+          <div class="eyes">
+            <div class="eye">
+              <div class="pupil"></div>
+            </div>
+            <div class="eye">
+              <div class="pupil"></div>
+            </div>
+          </div>
+          <div class="smile"></div>
+        </div>
+        <div class="tentacles">
+          <div class="tentacle" *ngFor="let i of [1,2,3,4,5,6]" [style.--i]="i"></div>
+        </div>
+        <ion-icon name="sparkles-outline" class="sparkle-icon"></ion-icon>
+      </div>
 
-    <ion-item>
-      <ion-label>Tipo de comida</ion-label>
-      <ion-select [(ngModel)]="preferences.foodType" placeholder="Selecciona">
-        <ion-select-option value="mexicana">Mexicana</ion-select-option>
-        <ion-select-option value="mariscos">Mariscos</ion-select-option>
-        <ion-select-option value="italiana">Italiana</ion-select-option>
-        <ion-select-option value="rapida">Comida rápida</ion-select-option>
-      </ion-select>
-    </ion-item>
+      <!-- Speech Bubble -->
+      <div class="speech-bubble">
+        <div class="tail"></div>
+        <p>{{ getPollyMessage() }}</p>
+      </div>
 
-    <ion-item>
-      <ion-label>Presupuesto</ion-label>
-      <ion-select [(ngModel)]="preferences.budget" placeholder="Selecciona">
-        <ion-select-option value="bajo">Bajo</ion-select-option>
-        <ion-select-option value="medio">Medio</ion-select-option>
-        <ion-select-option value="alto">Alto</ion-select-option>
-      </ion-select>
-    </ion-item>
+      <!-- Progress Indicators -->
+      <div class="progress-bar">
+        <div class="step-indicator" [class.active]="step === currentStep" [class.completed]="step < currentStep"
+          *ngFor="let step of [1, 2]">
+        </div>
+      </div>
+    </div>
 
-    <ion-item>
-      <ion-label>Tipo de lugar</ion-label>
-      <ion-select [(ngModel)]="preferences.placeType" placeholder="Selecciona">
-        <ion-select-option value="playa">Playa</ion-select-option>
-        <ion-select-option value="cultural">Cultural</ion-select-option>
-        <ion-select-option value="naturaleza">Naturaleza</ion-select-option>
-        <ion-select-option value="restaurante">Restaurante</ion-select-option>
-      </ion-select>
-    </ion-item>
+    <!-- Content Area -->
+    <div class="content-area">
 
-  </ion-list>
+      <!-- Step 1: Food Type -->
+      <div *ngIf="currentStep === 1" class="step-content">
+        <h3>Tipo de comida</h3>
+        <p class="subtitle">Selecciona tus favoritas</p>
 
-  <ion-button expand="block" (click)="savePreferences()">
-    Guardar preferencias
-  </ion-button>
+        <div class="options-grid">
+          <button *ngFor="let food of foodTypes" class="option-card"
+            [class.selected]="selectedFoodTypes.includes(food.id)" (click)="toggleFoodType(food.id)">
+            <ion-icon [name]="food.icon" class="option-icon"></ion-icon>
+            <span class="option-label">{{ food.label }}</span>
+          </button>
+        </div>
+      </div>
 
+      <!-- Step 2: Budget & Place Type Combined -->
+      <div *ngIf="currentStep === 2" class="step-content">
+
+        <!-- Budget Section -->
+        <div class="section-block">
+          <h3>Presupuesto</h3>
+          <p class="subtitle">¿Cuánto quieres gastar?</p>
+
+          <div class="budget-list">
+            <button *ngFor="let budget of budgetOptions" class="budget-card"
+              [class.selected]="selectedBudget === budget.id" (click)="selectBudget(budget.id)">
+              <div class="budget-info">
+                <div class="budget-symbol">{{ budget.symbol }}</div>
+                <div class="budget-text">
+                  <span class="budget-label">{{ budget.label }}</span>
+                  <span class="budget-desc">{{ budget.description }}</span>
+                </div>
+              </div>
+              <div class="radio-circle">
+                <div class="radio-inner" *ngIf="selectedBudget === budget.id"></div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Place Type Section -->
+        <div class="section-block" style="margin-top: 2rem;">
+          <h3>Tipo de lugar</h3>
+          <p class="subtitle">Ambiente preferido</p>
+
+          <div class="options-grid">
+            <button *ngFor="let place of placeTypes" class="option-card"
+              [class.selected]="selectedPlaceTypes.includes(place.id)" (click)="togglePlaceType(place.id)">
+              <ion-icon [name]="place.icon" class="option-icon"></ion-icon>
+              <span class="option-label">{{ place.label }}</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Bottom Actions -->
+    <div class="bottom-actions">
+      <button class="btn-next" (click)="handleNext()" [disabled]="!canContinue()">
+        <span *ngIf="currentStep < 2">Siguiente</span>
+        <span *ngIf="currentStep === 2">Ver recomendaciones</span>
+        <ion-icon name="chevron-forward-outline" *ngIf="currentStep < 2"></ion-icon>
+      </button>
+    </div>
+
+  </div>
 </ion-content>

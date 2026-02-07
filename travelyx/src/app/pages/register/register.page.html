@@ -1,13 +1,87 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>register</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">register</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="register-container">
+
+    <!-- Header -->
+    <div class="header-bar">
+      <button class="btn-back" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+      <h2>Crear cuenta</h2>
+    </div>
+
+    <!-- Subtitle -->
+    <div class="subtitle">
+      <p>Únete a Travelyx y descubre restaurantes increíbles</p>
+    </div>
+
+    <!-- Form -->
+    <div class="form-section">
+      <form (ngSubmit)="register()">
+
+        <!-- Name Input -->
+        <div class="input-group">
+          <label>Nombre completo</label>
+          <div class="input-wrapper">
+            <ion-icon name="person-outline" class="input-icon"></ion-icon>
+            <input type="text" [(ngModel)]="name" name="name" placeholder="Juan Pérez" required>
+          </div>
+        </div>
+
+        <!-- Email Input -->
+        <div class="input-group">
+          <label>Correo electrónico</label>
+          <div class="input-wrapper">
+            <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+            <input type="email" [(ngModel)]="email" name="email" placeholder="tu@email.com" required>
+          </div>
+        </div>
+
+        <!-- Password Input -->
+        <div class="input-group">
+          <label>Contraseña</label>
+          <div class="input-wrapper">
+            <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+            <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password"
+              placeholder="Mínimo 8 caracteres" minlength="8" required>
+            <button type="button" class="eye-btn" (click)="togglePasswordVisibility()">
+              <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Confirm Password Input -->
+        <div class="input-group">
+          <label>Confirmar contraseña</label>
+          <div class="input-wrapper">
+            <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+            <input [type]="showConfirmPassword ? 'text' : 'password'" [(ngModel)]="confirmPassword"
+              name="confirmPassword" placeholder="Repite tu contraseña" required>
+            <button type="button" class="eye-btn" (click)="toggleConfirmPasswordVisibility()">
+              <ion-icon [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            </button>
+          </div>
+          <p class="error-msg" *ngIf="password && confirmPassword && password !== confirmPassword">
+            Las contraseñas no coinciden
+          </p>
+        </div>
+
+        <!-- Terms -->
+        <div class="terms">
+          <p>
+            Al registrarte, aceptas nuestros
+            <button type="button">Términos de Servicio</button>
+            y
+            <button type="button">Política de Privacidad</button>
+          </p>
+        </div>
+
+        <!-- Register Button -->
+        <button type="submit" class="btn-primary"
+          [disabled]="!name || !email || !password || password !== confirmPassword">
+          Crear cuenta
+        </button>
+
+      </form>
+    </div>
+  </div>
 </ion-content>

@@ -1,0 +1,95 @@
+/* Restaurant Form Styles */
+
+.form-container {
+    padding: 1.5rem 1rem;
+    background: var(--c-gray-50);
+    min-height: 100%;
+}
+
+.section-title {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    padding-left: 0.5rem;
+
+    ion-icon {
+        font-size: 1.5rem;
+        color: var(--c-purple-500);
+        margin-bottom: 0.25rem;
+        display: none;
+        /* Icon optional in header */
+    }
+
+    h3 {
+        margin: 0;
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--c-purple-700);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    p {
+        margin: 0.25rem 0 0;
+        font-size: 0.875rem;
+        color: var(--c-gray-500);
+    }
+}
+
+.form-list {
+    background: transparent;
+    padding: 0;
+
+    ion-item {
+        --background: white;
+        --border-radius: 1rem;
+        --padding-start: 1rem;
+        --inner-padding-end: 1rem;
+        margin-bottom: 0.75rem;
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+
+        ion-label {
+            color: var(--c-gray-600) !important;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        ion-input,
+        ion-textarea,
+        ion-select {
+            --padding-bottom: 0.5rem;
+        }
+    }
+}
+
+.image-preview {
+    margin: 0.5rem 0 1rem;
+    border-radius: 1rem;
+    overflow: hidden;
+    height: 10rem;
+    background: var(--c-gray-200);
+    border: 2px dashed var(--c-gray-300);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.submit-area {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+
+    .btn-primary {
+        --background: linear-gradient(to right, var(--c-purple-500), var(--c-purple-600));
+        --border-radius: 1rem;
+        font-weight: 600;
+        height: 3.5rem;
+    }
+}

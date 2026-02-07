@@ -1,9 +1,107 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Mapa de Progreso</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true">
+  <div class="map-container">
 
-<ion-content>
-  <div id="map" ></div>
+    <!-- Map Area (Simulated) -->
+    <div class="map-area">
+
+      <!-- Markers -->
+      <button *ngFor="let place of restaurants" class="map-marker" [style.top]="place.position.top"
+        [style.left]="place.position.left" (click)="handleMarkerClick(place)">
+
+        <div class="marker-content" [class.selected]="selectedRestaurant?.id === place.id">
+          <div class="marker-label" [class.selected]="selectedRestaurant?.id === place.id">
+            {{ place.name }}
+          </div>
+          <div class="marker-pin" [class.selected]="selectedRestaurant?.id === place.id">
+            <ion-icon name="location-outline"></ion-icon>
+          </div>
+        </div>
+      </button>
+
+      <!-- Center Button -->
+      <button class="btn-center" (click)="centerOnUser()">
+        <ion-icon name="navigate-outline"></ion-icon>
+      </button>
+    </div>
+
+    <!-- Top UI -->
+    <div class="top-controls">
+      <!-- Back Button (New) -->
+      <button class="control-btn back" (click)="backToWelcome()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+
+      <button class="control-btn filters" (click)="toggleFilters()">
+        <ion-icon name="options-outline"></ion-icon>
+        <span>Filtros</span>
+      </button>
+
+      <button class="control-btn menu" (click)="toggleMenu()">
+        <ion-icon name="settings-outline"></ion-icon>
+      </button>
+    </div>
+
+    <!-- Menu Dropdown -->
+    <div class="menu-dropdown" *ngIf="showMenu">
+      <button (click)="goToPreferences()">
+        <ion-icon name="options-outline"></ion-icon>
+        <span>Preferencias</span>
+      </button>
+      <button class="logout" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+        <span>Cerrar sesión</span>
+      </button>
+    </div>
+
+    <!-- Filters Panel -->
+    <div class="filters-panel" *ngIf="showFilters">
+      <div class="panel-header">
+        <h3>Filtrar por</h3>
+        <button (click)="toggleFilters()">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+      <div class="active-filters">
+        <span class="filter-tag">Italiana</span>
+        <span class="filter-tag">Mexicana</span>
+      </div>
+      <p class="budget-info">Presupuesto: <strong>Moderado</strong></p>
+    </div>
+
+    <!-- Bottom Sheet -->
+    <div class="bottom-sheet" *ngIf="showBottomSheet || selectedRestaurant">
+      <div class="sheet-handle"></div>
+
+      <div class="sheet-header">
+        <h3>Restaurantes cercanos</h3>
+        <p>{{ restaurants.length }} lugares encontrados</p>
+      </div>
+
+      <div class="places-list">
+        <button *ngFor="let place of restaurants" class="place-item"
+          [class.active]="selectedRestaurant?.id === place.id" (click)="handleMarkerClick(place)">
+
+          <img [src]="place.image" alt="{{ place.name }}" class="place-img">
+
+          <div class="place-info">
+            <h4>{{ place.name }}</h4>
+            <p class="type">{{ place.type }}</p>
+            <div class="meta-row">
+              <div class="rating">
+                <ion-icon name="star"></ion-icon>
+                <span>{{ place.rating }}</span>
+              </div>
+              <span class="price">{{ place.priceLevel }}</span>
+              <span class="distance">{{ place.distance }}</span>
+            </div>
+          </div>
+
+          <div class="nav-icon">
+            <ion-icon name="navigate-outline"></ion-icon>
+          </div>
+        </button>
+      </div>
+    </div>
+
+  </div>
 </ion-content>

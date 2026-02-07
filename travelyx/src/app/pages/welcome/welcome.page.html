@@ -1,0 +1,46 @@
+<ion-content [fullscreen]="true">
+    <div class="welcome-container">
+
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <!-- Octopus Character (Reused) -->
+            <div class="octopus-container">
+                <div class="octopus-head">
+                    <div class="eyes">
+                        <div class="eye">
+                            <div class="pupil"></div>
+                        </div>
+                        <div class="eye">
+                            <div class="pupil"></div>
+                        </div>
+                    </div>
+                    <div class="smile"></div>
+                </div>
+                <div class="tentacles">
+                    <div class="tentacle" *ngFor="let i of [1,2,3,4,5,6]" [style.--i]="i"></div>
+                </div>
+            </div>
+
+            <h1>Travelyx</h1>
+            <p>Tu guía turístico virtual en Progreso</p>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions-section">
+            <button class="btn-primary" (click)="startExperience()">
+                <span>Comenzar experiencia</span>
+                <ion-icon name="arrow-forward-outline"></ion-icon>
+            </button>
+
+            <div class="divider">
+                <span>o</span>
+            </div>
+
+            <button class="btn-secondary" (click)="goToAdminLogin()">
+                <ion-icon name="storefront-outline"></ion-icon>
+                <span>Acceso Restaurantes</span>
+            </button>
+        </div>
+
+    </div>
+</ion-content>

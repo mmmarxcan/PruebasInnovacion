@@ -1,20 +1,84 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="home-container">
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <!-- Polly Section -->
+    <div class="polly-section">
+      <!-- Octopus Character -->
+      <div class="octopus-container">
+        <div class="octopus-head">
+          <div class="eyes">
+            <div class="eye">
+              <div class="pupil"></div>
+            </div>
+            <div class="eye">
+              <div class="pupil"></div>
+            </div>
+          </div>
+          <div class="smile"></div>
+        </div>
+        <div class="tentacles">
+          <div class="tentacle" *ngFor="let i of [1,2,3,4,5,6]" [style.--i]="i"></div>
+        </div>
+        <ion-icon name="sparkles-outline" class="sparkle-icon"></ion-icon>
+      </div>
+
+      <!-- Speech Bubble -->
+      <div class="speech-bubble">
+        <div class="tail"></div>
+        <h2>¡Hola! Soy Polly 🐙</h2>
+        <p>Basándome en tus preferencias, he encontrado estos restaurantes perfectos para ti. ¡Selecciona los que te
+          gustaría explorar!</p>
+      </div>
+    </div>
+
+    <!-- Recommendations List -->
+    <div class="recommendations-area">
+      <h3 class="section-title">
+        <ion-icon name="star" color="tertiary"></ion-icon>
+        Mis recomendaciones para ti
+      </h3>
+
+      <div class="restaurant-list">
+        <button *ngFor="let place of recommendedRestaurants" class="restaurant-card"
+          [class.selected]="selectedRestaurants.includes(place.id)" (click)="toggleRestaurant(place.id)">
+
+          <!-- Selection Check -->
+          <div class="check-icon" *ngIf="selectedRestaurants.includes(place.id)">
+            <ion-icon name="checkmark-circle"></ion-icon>
+          </div>
+
+          <div class="card-content">
+            <h4 class="restaurant-name">{{ place.name }}</h4>
+            <p class="restaurant-desc">{{ place.description }}</p>
+
+            <div class="tags-row">
+              <div class="tag rating">
+                <ion-icon name="star"></ion-icon>
+                <span>{{ place.rating }}</span>
+              </div>
+              <span class="tag type">{{ place.type }}</span>
+              <span class="tag price">{{ place.priceLevel }}</span>
+            </div>
+
+            <div class="reason-badge">
+              <ion-icon name="sparkles-outline"></ion-icon>
+              <span>{{ place.reason }}</span>
+            </div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom Action -->
+    <div class="bottom-actions">
+      <div class="selection-count">
+        {{ selectedRestaurants.length > 0 ? selectedRestaurants.length + (selectedRestaurants.length === 1 ? '
+        restaurante seleccionado' : ' restaurantes seleccionados') : 'Selecciona al menos un restaurante' }}
+      </div>
+      <button class="btn-continue" (click)="handleContinue()" [disabled]="selectedRestaurants.length === 0">
+        Continuar al mapa
+      </button>
+    </div>
+
   </div>
 </ion-content>

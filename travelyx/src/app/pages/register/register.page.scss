@@ -1,0 +1,193 @@
+/* Register Page Styles */
+
+.register-container {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(to bottom, var(--c-emerald-50), #ffffff);
+}
+
+.header-bar {
+    display: flex;
+    align-items: center;
+    padding: 3rem 1.5rem 1.5rem;
+
+    .btn-back {
+        width: 2.5rem;
+        height: 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        &:hover {
+            background-color: var(--c-gray-100);
+        }
+
+        ion-icon {
+            font-size: 1.5rem;
+            color: var(--c-gray-700);
+        }
+    }
+
+    h2 {
+        flex: 1;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--c-gray-800);
+        margin: 0;
+        padding-right: 2.5rem;
+        /* Balance back button */
+    }
+}
+
+.subtitle {
+    padding: 0 2rem 1.5rem;
+
+    p {
+        text-align: center;
+        color: var(--c-gray-500);
+        margin: 0;
+    }
+}
+
+.form-section {
+    flex: 1;
+    padding: 0 2rem 2rem;
+    overflow-y: auto;
+
+    .input-group {
+        margin-bottom: 1rem;
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--c-gray-700);
+            margin-bottom: 0.5rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+
+            .input-icon {
+                position: absolute;
+                left: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--c-gray-400);
+                font-size: 1.25rem;
+                pointer-events: none;
+            }
+
+            input {
+                width: 100%;
+                padding-left: 3rem;
+                padding-right: 1rem;
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+                border: 1px solid var(--c-gray-200);
+                border-radius: 1rem;
+                outline: none;
+                transition: all 0.2s;
+                background: white;
+                font-size: 1rem;
+
+                &:focus {
+                    border-color: var(--c-emerald-500);
+                    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+                }
+            }
+
+            .eye-btn {
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                background: none;
+                border: none;
+                color: var(--c-gray-400);
+                display: flex;
+                padding: 0;
+                cursor: pointer;
+
+                ion-icon {
+                    font-size: 1.25rem;
+                }
+
+                &:hover {
+                    color: var(--c-gray-600);
+                }
+            }
+        }
+
+        .error-msg {
+            font-size: 0.875rem;
+            color: var(--ion-color-danger);
+            margin-top: 0.5rem;
+            margin-bottom: 0;
+        }
+    }
+
+    .terms {
+        margin-top: 0.5rem;
+        margin-bottom: 1.5rem;
+
+        p {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--c-gray-500);
+            line-height: 1.5;
+            margin: 0;
+
+            button {
+                background: none;
+                border: none;
+                padding: 0;
+                color: var(--c-emerald-600);
+                font-weight: 600;
+                cursor: pointer;
+                font-size: inherit;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+
+    .btn-primary {
+        width: 100%;
+        background: var(--c-button-gradient);
+        color: white;
+        padding: 1rem;
+        border-radius: 1rem;
+        font-weight: 600;
+        font-size: 1rem;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s;
+
+        &:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            opacity: 0.95;
+        }
+
+        &:active {
+            transform: scale(0.98);
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+    }
+}
