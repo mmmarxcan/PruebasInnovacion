@@ -111,6 +111,8 @@
 
     .btn-primary {
         width: 100%;
+        animation: pulse 2s infinite;
+        /* Add pulse animation */
         background: linear-gradient(to right, var(--c-purple-500), var(--c-purple-600));
         color: white;
         padding: 1.125rem;

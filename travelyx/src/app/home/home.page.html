@@ -39,8 +39,9 @@
       </h3>
 
       <div class="restaurant-list">
-        <button *ngFor="let place of recommendedRestaurants" class="restaurant-card"
-          [class.selected]="selectedRestaurants.includes(place.id)" (click)="toggleRestaurant(place.id)">
+        <button *ngFor="let place of recommendedRestaurants; let i = index" class="restaurant-card animate-fade-in-up"
+          [class.stagger-{{i+1}}]="true" [class.selected]="selectedRestaurants.includes(place.id)"
+          (click)="toggleRestaurant(place.id)">
 
           <!-- Selection Check -->
           <div class="check-icon" *ngIf="selectedRestaurants.includes(place.id)">

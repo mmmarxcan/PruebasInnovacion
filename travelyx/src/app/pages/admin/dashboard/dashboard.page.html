@@ -52,7 +52,8 @@
 
         <!-- Restaurant List -->
         <div class="restaurant-list" *ngIf="restaurants.length > 0">
-            <ion-card *ngFor="let place of restaurants">
+            <ion-card *ngFor="let place of restaurants; let i = index" class="animate-fade-in-up"
+                [class.stagger-{{i+1}}]="true">
                 <img [src]="place.image" alt="Foto del restaurante" />
                 <ion-card-content>
                     <div class="card-header">
