@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonButton, IonIcon, IonInput, IonFabButton, IonLabel, IonText, IonRow, IonCol } from '@ionic/angular/standalone';
+import {
+  IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonLabel,
+  IonInput, IonButton, IonIcon, IonSpinner
+} from '@ionic/angular/standalone';
 import { Router, RouterLink } from '@angular/router';
-import { addIcons } from 'ionicons';
-import { mailOutline, lockClosedOutline, eyeOutline, eyeOffOutline, personOutline, arrowBackOutline } from 'ionicons/icons';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-register',
@@ -12,46 +14,48 @@ import { mailOutline, lockClosedOutline, eyeOutline, eyeOffOutline, personOutlin
   styleUrls: ['./register.page.scss'],
   standalone: true,
   imports: [
-    CommonModule,
-    FormsModule,
-    RouterLink,
-    IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonButton, IonIcon, IonInput, IonFabButton, IonLabel, IonText, IonRow, IonCol
+    IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonLabel,
+    IonInput, IonButton, IonIcon, IonSpinner,
+    CommonModule, FormsModule, RouterLink
   ]
 })
 export class RegisterPage implements OnInit {
-  name = '';
-  email = '';
-  password = '';
-  confirmPassword = '';
-  showPassword = false;
-  showConfirmPassword = false;
 
-  constructor(private router: Router) {
-    addIcons({ mailOutline, lockClosedOutline, eyeOutline, eyeOffOutline, personOutline, arrowBackOutline });
-  }
+  user = {
+    nombre: '',
+    email: '',
+    password: ''
+  };
+  isLoading = false;
+
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
   }
 
-  togglePasswordVisibility() {
-    this.showPassword = !this.showPassword;
-  }
-
-  toggleConfirmPasswordVisibility() {
-    this.showConfirmPassword = !this.showConfirmPassword;
-  }
-
-  goBack() {
-    this.router.navigateByUrl('/login');
-  }
-
   register() {
-    if (this.name && this.email && this.password && this.password === this.confirmPassword) {
-      console.log('Registering:', this.name, this.email);
-      // TODO: Implement registration
-      this.router.navigateByUrl('/preferences');
-    } else {
-      console.log('Validation failed');
+    if (!this.user.nombre || !this.user.email || !this.user.password) {
+      alert('Por favor completa todos los campos');
+      return;
     }
+
+    this.isLoading = true;
+    this.authService.register(this.user).subscribe({
+      next: (res) => {
+        this.isLoading = false;
+        alert('Registro exitoso. Por favor inicia sesión.');
+        this.router.navigateByUrl('/login');
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Error registro:', err);
+        if (err.status === 409) {
+          alert('El usuario ya existe.');
+        } else {
+          alert('Error al registrar usuario.');
+        }
+      }
+    });
   }
+
 }

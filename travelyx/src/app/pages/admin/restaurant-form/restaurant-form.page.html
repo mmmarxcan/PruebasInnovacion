@@ -1,132 +1,72 @@
 <ion-header [translucent]="true">
-    <ion-toolbar>
+    <ion-toolbar color="secondary">
         <ion-buttons slot="start">
             <ion-button (click)="cancel()">
                 <ion-icon name="arrow-back-outline"></ion-icon>
             </ion-button>
         </ion-buttons>
-        <ion-title>Nuevo Restaurante</ion-title>
+        <ion-title>{{ isEditMode ? 'Editar Perfil' : 'Nuevo Restaurante' }}</ion-title>
         <ion-buttons slot="end">
-            <ion-button (click)="saveRestaurant()" color="primary" strong="true">
+            <ion-button (click)="saveRestaurant()">
+                <ion-icon name="save-outline" slot="start"></ion-icon>
                 Guardar
             </ion-button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-    <div class="form-container">
+<ion-content [fullscreen]="true" class="ion-padding">
 
-        <!-- 1. Información General -->
-        <div class="section-title">
-            <ion-icon name="restaurant-outline"></ion-icon>
-            <h3>Información General</h3>
-        </div>
+    <form (ngSubmit)="saveRestaurant()">
+        <ion-item>
+            <ion-label position="stacked">Nombre del Restaurante</ion-label>
+            <ion-input [(ngModel)]="restaurant.nombre" name="nombre" placeholder="Ej. La Palapa Feliz"></ion-input>
+        </ion-item>
 
-        <ion-list lines="none" class="form-list">
-            <ion-item>
-                <ion-label position="stacked">Nombre del Restaurante</ion-label>
-                <ion-input [(ngModel)]="restaurant.name" placeholder="Ej. La Trattoria"></ion-input>
-            </ion-item>
+        <ion-item>
+            <ion-label position="stacked">Categoría</ion-label>
+            <ion-select [(ngModel)]="restaurant.categoria" name="categoria" placeholder="Selecciona una">
+                <ion-select-option *ngFor="let cat of categories" [value]="cat">{{ cat }}</ion-select-option>
+            </ion-select>
+        </ion-item>
 
-            <ion-item>
-                <ion-label position="stacked">Descripción Corta</ion-label>
-                <ion-textarea [(ngModel)]="restaurant.description" rows="3"
-                    placeholder="Breve descripción para la tarjeta..."></ion-textarea>
-            </ion-item>
+        <ion-item>
+            <ion-label position="stacked">Dirección</ion-label>
+            <ion-textarea [(ngModel)]="restaurant.direccion" name="direccion"
+                placeholder="Calle 19 x 80..."></ion-textarea>
+        </ion-item>
 
-            <ion-item>
-                <ion-label position="stacked">Dirección</ion-label>
-                <ion-input [(ngModel)]="restaurant.address" placeholder="Calle, Número, Colonia"></ion-input>
-            </ion-item>
-        </ion-list>
+        <ion-item>
+            <ion-label position="stacked">Teléfono</ion-label>
+            <ion-input [(ngModel)]="restaurant.telefono" name="telefono" type="tel"></ion-input>
+        </ion-item>
 
-        <!-- 2. Categorización -->
-        <div class="section-title">
-            <ion-icon name="filter-circle-outline"></ion-icon>
-            <h3>Categorización</h3>
-            <p>Ayuda a Polly a recomendar tu negocio</p>
-        </div>
+        <ion-item>
+            <ion-label position="stacked">Sitio Web / Facebook</ion-label>
+            <ion-input [(ngModel)]="restaurant.website" name="website" type="url"></ion-input>
+        </ion-item>
 
-        <ion-list lines="none" class="form-list">
-            <ion-item>
-                <ion-label position="stacked">Tipo de Comida</ion-label>
-                <ion-select [(ngModel)]="restaurant.type" multiple="true" placeholder="Selecciona tipos">
-                    <ion-select-option *ngFor="let type of foodTypes" [value]="type.id">{{ type.label
-                        }}</ion-select-option>
-                </ion-select>
-            </ion-item>
+        <ion-item lines="none">
+            <ion-label position="stacked">Foto de Portada</ion-label>
+            <!-- Hidden File Input -->
+            <input type="file" (change)="onFileSelected($event, 'cover')" #fileInput style="display: none;">
 
-            <ion-item>
-                <ion-label position="stacked">Rango de Precios</ion-label>
-                <ion-select [(ngModel)]="restaurant.priceLevel" placeholder="Selecciona rango">
-                    <ion-select-option value="$">Económico ($)</ion-select-option>
-                    <ion-select-option value="$$">Moderado ($$)</ion-select-option>
-                    <ion-select-option value="$$$">Premium ($$$)</ion-select-option>
-                </ion-select>
-            </ion-item>
-
-            <ion-item>
-                <ion-label position="stacked">Ambiente</ion-label>
-                <ion-select [(ngModel)]="restaurant.placeType" multiple="true" placeholder="Selecciona ambiente">
-                    <ion-select-option *ngFor="let place of placeTypes" [value]="place.id">{{ place.label
-                        }}</ion-select-option>
-                </ion-select>
-            </ion-item>
-        </ion-list>
-
-        <!-- 3. Multimedia -->
-        <div class="section-title">
-            <ion-icon name="image-outline"></ion-icon>
-            <h3>Multimedia</h3>
-        </div>
-
-        <ion-list lines="none" class="form-list">
-            <ion-item>
-                <ion-label position="stacked">Foto del Restaurante (URL)</ion-label>
-                <ion-input [(ngModel)]="restaurant.coverImage" placeholder="https://..."></ion-input>
-            </ion-item>
-
-            <!-- Preview -->
-            <div class="image-preview" *ngIf="restaurant.coverImage">
-                <img [src]="restaurant.coverImage" alt="Preview restaurante" />
+            <div class="div-image-upload">
+                <ion-button fill="outline" (click)="fileInput.click()">
+                    <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+                    Subir Imagen
+                </ion-button>
+                <div *ngIf="restaurant.foto_portada" class="ion-margin-top">
+                    <img [src]="restaurant.foto_portada" style="max-height: 200px; border-radius: 8px;">
+                </div>
             </div>
+        </ion-item>
 
-            <ion-item>
-                <ion-label position="stacked">Foto del Platillo Destacado (URL)</ion-label>
-                <ion-input [(ngModel)]="restaurant.dishImage" placeholder="https://..."></ion-input>
-            </ion-item>
-
-            <!-- Preview -->
-            <div class="image-preview" *ngIf="restaurant.dishImage">
-                <img [src]="restaurant.dishImage" alt="Preview platillo" />
-            </div>
-        </ion-list>
-
-        <!-- 4. Platillo Destacado Info -->
-        <div class="section-title">
-            <ion-icon name="fast-food-outline"></ion-icon>
-            <h3>Platillo Estrella</h3>
-        </div>
-
-        <ion-list lines="none" class="form-list">
-            <ion-item>
-                <ion-label position="stacked">Nombre del Platillo</ion-label>
-                <ion-input [(ngModel)]="restaurant.dishName" placeholder="Ej. Pasta Carbonara"></ion-input>
-            </ion-item>
-
-            <ion-item>
-                <ion-label position="stacked">Precio Aproximado</ion-label>
-                <ion-input type="number" [(ngModel)]="restaurant.dishPrice" placeholder="0.00"></ion-input>
-            </ion-item>
-        </ion-list>
-
-        <div class="submit-area">
-            <ion-button expand="block" (click)="saveRestaurant()" class="btn-primary">
-                <ion-icon name="save-outline" slot="start"></ion-icon>
-                Guardar Restaurante
+        <div class="ion-padding-top">
+            <ion-button expand="block" type="submit" color="secondary">
+                {{ isEditMode ? 'Actualizar Información' : 'Crear Restaurante' }}
             </ion-button>
         </div>
+    </form>
 
-    </div>
 </ion-content>

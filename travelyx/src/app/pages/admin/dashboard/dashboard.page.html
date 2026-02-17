@@ -1,87 +1,57 @@
 <ion-header [translucent]="true">
     <ion-toolbar>
-        <ion-title>Mis Restaurantes</ion-title>
+        <ion-title>Dashboard Restaurante</ion-title>
         <ion-buttons slot="end">
-            <ion-button (click)="logout()">
-                <ion-icon name="log-out-outline" color="danger"></ion-icon>
-            </ion-button>
+            <!-- Logout logic moved to menu or separate button -->
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-    <div class="dashboard-container">
+    <div class="ion-padding">
+        <h1>Bienvenido, {{ userName }}</h1>
 
-        <!-- Analytics CTA -->
-        <div class="analytics-cta" *ngIf="restaurants.length > 0">
-            <div class="cta-text">
-                <h3>Analíticas</h3>
-                <p>Revisa el rendimiento de tus restaurantes</p>
-            </div>
-            <ion-button (click)="goToAnalytics()" class="btn-analytics" fill="solid" color="tertiary">
-                <ion-icon name="stats-chart-outline" slot="start"></ion-icon>
-                Ver Estadísticas
+        <!-- Estado: Sin Restaurante -->
+        <div *ngIf="!restaurantId" class="ion-text-center ion-margin-top">
+            <ion-icon name="storefront-outline" style="font-size: 4rem; color: #ccc;"></ion-icon>
+            <h3>¡Aún no tienes un restaurante!</h3>
+            <p>Da de alta tu negocio para comenzar a gestionar tu menú y recibir clientes.</p>
+            <ion-button expand="block" (click)="createRestaurant()" class="ion-margin-top">
+                <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+                Dar de alta mi Restaurante
             </ion-button>
         </div>
 
-        <!-- Empty State -->
-        <div class="empty-state" *ngIf="restaurants.length === 0">
-            <div class="octopus-container small">
-                <div class="octopus-head">
-                    <div class="eyes">
-                        <div class="eye">
-                            <div class="pupil"></div>
-                        </div>
-                        <div class="eye">
-                            <div class="pupil"></div>
-                        </div>
-                    </div>
-                    <div class="smile"></div>
-                </div>
-                <div class="tentacles">
-                    <div class="tentacle" *ngFor="let i of [1,2,3,4,5,6]" [style.--i]="i"></div>
-                </div>
-            </div>
-            <h3>¡Aún no tienes restaurantes!</h3>
-            <p>Registra tu primer negocio para que Polly pueda recomendarlo.</p>
-            <ion-button (click)="addRestaurant()" class="btn-primary">
-                <ion-icon name="add" slot="start"></ion-icon>
-                Registrar Restaurante
-            </ion-button>
+        <!-- Estado: Con Restaurante -->
+        <div *ngIf="restaurantId">
+            <p>Gestiona <strong>{{ restaurantName }}</strong> desde aquí.</p>
+
+            <ion-grid>
+                <ion-row>
+                    <ion-col size="12" size-md="6">
+                        <ion-card button routerLink="/admin/menu">
+                            <ion-card-header>
+                                <ion-icon name="pizza-outline" size="large" color="primary"></ion-icon>
+                                <ion-card-title>Mi Menú</ion-card-title>
+                            </ion-card-header>
+                            <ion-card-content>
+                                Administra tus platillos, precios y fotos.
+                            </ion-card-content>
+                        </ion-card>
+                    </ion-col>
+                    <ion-col size="12" size-md="6">
+                        <ion-card button routerLink="/admin/restaurant-form">
+                            <ion-card-header>
+                                <ion-icon name="storefront-outline" size="large" color="secondary"></ion-icon>
+                                <ion-card-title>Mi Perfil</ion-card-title>
+                            </ion-card-header>
+                            <ion-card-content>
+                                Edita la información de tu negocio.
+                            </ion-card-content>
+                        </ion-card>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
         </div>
-
-        <!-- Restaurant List -->
-        <div class="restaurant-list" *ngIf="restaurants.length > 0">
-            <ion-card *ngFor="let place of restaurants; let i = index" class="animate-fade-in-up"
-                [class.stagger-{{i+1}}]="true">
-                <img [src]="place.image" alt="Foto del restaurante" />
-                <ion-card-content>
-                    <div class="card-header">
-                        <h2>{{ place.name }}</h2>
-                        <ion-chip color="tertiary">
-                            <ion-label>{{ place.type }}</ion-label>
-                        </ion-chip>
-                    </div>
-
-                    <div class="card-actions">
-                        <ion-button fill="clear" color="medium" (click)="deleteRestaurant(place.id)">
-                            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
-                        </ion-button>
-                        <ion-button fill="solid" color="secondary" (click)="editRestaurant(place.id)">
-                            <ion-icon name="create-outline" slot="start"></ion-icon>
-                            Editar
-                        </ion-button>
-                    </div>
-                </ion-card-content>
-            </ion-card>
-        </div>
-
-        <!-- FAB -->
-        <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="restaurants.length > 0">
-            <ion-fab-button color="tertiary" (click)="addRestaurant()">
-                <ion-icon name="add"></ion-icon>
-            </ion-fab-button>
-        </ion-fab>
-
     </div>
 </ion-content>

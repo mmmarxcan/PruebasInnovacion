@@ -1,87 +1,43 @@
-<ion-content [fullscreen]="true">
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Crear Cuenta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+
   <div class="register-container">
-
-    <!-- Header -->
-    <div class="header-bar">
-      <button class="btn-back" (click)="goBack()">
-        <ion-icon name="arrow-back-outline"></ion-icon>
-      </button>
-      <h2>Crear cuenta</h2>
+    <div class="logo-container">
+      <img src="assets/icon/favicon.png" alt="Travelyx Logo" class="logo" /> <!-- Asumiendo logo o usar texto -->
+      <h1>Únete a Travelyx</h1>
+      <p>Gestiona tu restaurante y llega a más clientes.</p>
     </div>
 
-    <!-- Subtitle -->
-    <div class="subtitle">
-      <p>Únete a Travelyx y descubre restaurantes increíbles</p>
-    </div>
+    <div class="form-container">
+      <ion-item fill="outline" class="ion-margin-bottom">
+        <ion-label position="floating">Nombre Completo</ion-label>
+        <ion-input [(ngModel)]="user.nombre" type="text"></ion-input>
+      </ion-item>
 
-    <!-- Form -->
-    <div class="form-section">
-      <form (ngSubmit)="register()">
+      <ion-item fill="outline" class="ion-margin-bottom">
+        <ion-label position="floating">Correo Electrónico</ion-label>
+        <ion-input [(ngModel)]="user.email" type="email"></ion-input>
+      </ion-item>
 
-        <!-- Name Input -->
-        <div class="input-group">
-          <label>Nombre completo</label>
-          <div class="input-wrapper">
-            <ion-icon name="person-outline" class="input-icon"></ion-icon>
-            <input type="text" [(ngModel)]="name" name="name" placeholder="Juan Pérez" required>
-          </div>
-        </div>
+      <ion-item fill="outline" class="ion-margin-bottom">
+        <ion-label position="floating">Contraseña</ion-label>
+        <ion-input [(ngModel)]="user.password" type="password"></ion-input>
+      </ion-item>
 
-        <!-- Email Input -->
-        <div class="input-group">
-          <label>Correo electrónico</label>
-          <div class="input-wrapper">
-            <ion-icon name="mail-outline" class="input-icon"></ion-icon>
-            <input type="email" [(ngModel)]="email" name="email" placeholder="tu@email.com" required>
-          </div>
-        </div>
+      <ion-button expand="block" (click)="register()" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Registrarse</span>
+        <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+      </ion-button>
 
-        <!-- Password Input -->
-        <div class="input-group">
-          <label>Contraseña</label>
-          <div class="input-wrapper">
-            <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
-            <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password"
-              placeholder="Mínimo 8 caracteres" minlength="8" required>
-            <button type="button" class="eye-btn" (click)="togglePasswordVisibility()">
-              <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
-            </button>
-          </div>
-        </div>
-
-        <!-- Confirm Password Input -->
-        <div class="input-group">
-          <label>Confirmar contraseña</label>
-          <div class="input-wrapper">
-            <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
-            <input [type]="showConfirmPassword ? 'text' : 'password'" [(ngModel)]="confirmPassword"
-              name="confirmPassword" placeholder="Repite tu contraseña" required>
-            <button type="button" class="eye-btn" (click)="toggleConfirmPasswordVisibility()">
-              <ion-icon [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
-            </button>
-          </div>
-          <p class="error-msg" *ngIf="password && confirmPassword && password !== confirmPassword">
-            Las contraseñas no coinciden
-          </p>
-        </div>
-
-        <!-- Terms -->
-        <div class="terms">
-          <p>
-            Al registrarte, aceptas nuestros
-            <button type="button">Términos de Servicio</button>
-            y
-            <button type="button">Política de Privacidad</button>
-          </p>
-        </div>
-
-        <!-- Register Button -->
-        <button type="submit" class="btn-primary"
-          [disabled]="!name || !email || !password || password !== confirmPassword">
-          Crear cuenta
-        </button>
-
-      </form>
+      <div class="ion-text-center ion-margin-top">
+        <p>¿Ya tienes cuenta? <a routerLink="/login">Inicia Sesión</a></p>
+      </div>
     </div>
   </div>
+
 </ion-content>

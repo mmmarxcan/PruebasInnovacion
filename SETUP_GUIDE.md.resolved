@@ -1,0 +1,92 @@
+# Guía de Instalación y Ejecución - Travelyx
+
+Esta guía detalla paso a paso cómo configurar y ejecutar el proyecto Travelyx (Frontend + Backend) en un entorno local.
+
+## 1. Prerrequisitos
+
+Asegúrate de tener instalado lo siguiente antes de comenzar:
+
+*   **Node.js** (Versión LTS recomendada): [Descargar aquí](https://nodejs.org/)
+*   **MySQL Server**: [Descargar aquí](https://dev.mysql.com/downloads/installer/)
+*   **Ionic CLI**: Instalar globalmente con el comando:
+    ```bash
+    npm install -g @ionic/cli
+    ```
+*   **Git**: [Descargar aquí](https://git-scm.com/)
+
+## 2. Clonar el Repositorio
+
+Si aún no tienes el código, clona el repositorio:
+
+```bash
+git clone <URL_DEL_REPOSITORIO>
+cd <CARPETA_DEL_PROYECTO>
+```
+
+## 3. Configuración de Base de Datos (MySQL)
+
+1.  Abre tu cliente de MySQL (Workbench, phpMyAdmin, o línea de comandos).
+2.  Ejecuta el script SQL ubicado en [backend/db_setup.sql](file:///c:/Users/mmmarxcan/Desktop/PruebasInnovacion/backend/db_setup.sql).
+    *   Este script creará la base de datos `travelyx_db` y las tablas necesarias (`restaurantes`, `users`, `platillos`).
+    *   También creará un usuario administrador por defecto:
+        *   **Email**: `super@admin.com`
+        *   **Password**: `admin123`
+
+## 4. Configuración del Backend (API)
+
+El backend es un servidor Node.js que conecta con MySQL.
+
+1.  Abrir una terminal y navegar a la carpeta `backend`:
+    ```bash
+    cd backend
+    ```
+2.  Instalar las dependencias necesarias:
+    ```bash
+    npm install
+    ```
+3.  **(Opcional)** Si tu base de datos tiene contraseña (diferente a vacío) o usuario diferente a `root`, edita el archivo [server.js](file:///c:/Users/mmmarxcan/Desktop/PruebasInnovacion/backend/server.js) o crea un archivo `.env` con tus credenciales.
+4.  Iniciar el servidor:
+    ```bash
+    npm start
+    ```
+    *   Deberías ver el mensaje: `🚀 Servidor corriendo en puerto 3000` y `✅ Conectado a MySQL Database`.
+
+## 5. Configuración del Frontend (Ionic/Angular)
+
+El frontend es una aplicación móvil/web hecha con Ionic y Angular.
+
+1.  Abrir una **nueva** terminal y navegar a la carpeta `travelyx`:
+    ```bash
+    cd travelyx
+    ```
+2.  Instalar las dependencias:
+    ```bash
+    npm install
+    ```
+3.  **Configuración de IP (Importante)**:
+    *   Si vas a probar desde tu celular o un emulador, necesitas que la App apunte a la IP de tu computadora, no a `localhost`.
+    *   Abre [src/app/services/auth.ts](file:///c:/Users/mmmarxcan/Desktop/PruebasInnovacion/travelyx/src/app/services/auth.ts) y verifica la variable `apiUrl`.
+    *   Ejemplo para red local: `http://192.168.100.147:3000/api` (Reemplaza con **tu** IP local, puedes verla con `ipconfig` en Windows).
+    *   Si solo pruebas en el navegador de la misma PC, `http://localhost:3000/api` funciona bien.
+
+4.  Iniciar la aplicación:
+    ```bash
+    ionic serve
+    ```
+    *   Esto abrirá automáticamente una ventana del navegador con la aplicación (usualmente en `http://localhost:8100`).
+
+## Resumen de Comandos
+
+Para ejecutar el proyecto diariamente, necesitarás dos terminales:
+
+**Terminal 1 (Backend):**
+```bash
+cd backend
+npm start
+```
+
+**Terminal 2 (Frontend):**
+```bash
+cd travelyx
+ionic serve
+```

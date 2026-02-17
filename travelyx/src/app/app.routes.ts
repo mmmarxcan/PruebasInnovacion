@@ -42,4 +42,16 @@ export const routes: Routes = [
     path: 'admin/analytics',
     loadComponent: () => import('./pages/admin/analytics/analytics.page').then(m => m.AnalyticsPage)
   },
+  {
+    path: 'super-admin/dashboard',
+    loadComponent: () => import('./pages/super-admin/dashboard/dashboard.page').then(m => m.SuperAdminDashboardPage)
+  },
+  {
+    path: 'super-admin/restaurants',
+    loadComponent: () => import('./pages/super-admin/restaurants/restaurants.page').then(m => m.SuperAdminRestaurantsPage)
+  },  {
+    path: 'menu',
+    loadComponent: () => import('./pages/admin/menu/menu.page').then( m => m.MenuPage)
+  },
+
 ];

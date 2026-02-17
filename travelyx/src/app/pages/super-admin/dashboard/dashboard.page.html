@@ -1,0 +1,74 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Panel Super Admin</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/login">
+        Salir
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Panel de Control</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-grid>
+    <ion-row>
+      <!-- Total Restaurants Card -->
+      <ion-col size="12" size-md="4">
+        <ion-card class="stat-card">
+          <ion-card-header>
+            <ion-icon name="restaurant-outline" color="primary"></ion-icon>
+            <ion-card-subtitle>Total Restaurantes</ion-card-subtitle>
+            <ion-card-title>{{ stats.totalRestaurants }}</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+
+      <!-- Pending Requests Card -->
+      <ion-col size="12" size-md="4">
+        <ion-card class="stat-card" button routerLink="/super-admin/restaurants">
+          <ion-card-header>
+            <ion-icon name="time-outline" color="warning"></ion-icon>
+            <ion-card-subtitle>Solicitudes Pendientes</ion-card-subtitle>
+            <ion-card-title>{{ stats.pendingRequests }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>Ver listado para aprobar <ion-icon name="arrow-forward-outline"></ion-icon></p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <!-- Active Users (Mock) -->
+      <ion-col size="12" size-md="4">
+        <ion-card class="stat-card">
+          <ion-card-header>
+            <ion-icon name="people-outline" color="success"></ion-icon>
+            <ion-card-subtitle>Usuarios Activos</ion-card-subtitle>
+            <ion-card-title>{{ stats.activeUsers }}</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-margin-top">
+      <ion-col size="12">
+        <h3>Acciones Rápidas</h3>
+      </ion-col>
+      <ion-col size="12" size-md="6">
+        <ion-button expand="block" color="secondary" routerLink="/super-admin/restaurants">
+          <ion-icon slot="start" name="list-outline"></ion-icon>
+          Gestionar Restaurantes
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>
