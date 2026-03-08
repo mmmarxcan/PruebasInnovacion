@@ -7,103 +7,35 @@
   background: white;
 }
 
-.map-area {
+#leaflet-map {
   width: 100%;
   height: 100%;
-  background-color: #f0f9ff;
-  background-image:
-    linear-gradient(90deg, rgba(226, 232, 240, 0.5) 1px, transparent 1px),
-    linear-gradient(rgba(226, 232, 240, 0.5) 1px, transparent 1px);
-  background-size: 50px 50px;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
 
-  .map-marker {
-    position: absolute;
-    transform: translate(-50%, -100%);
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    z-index: 1;
-    transition: transform 0.2s, z-index 0.2s;
+.btn-center {
+  position: absolute;
+  bottom: 45%;
+  /* Adjust based on bottom sheet height */
+  right: 1rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: white;
+  border: none;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
 
-    &:hover {
-      transform: translate(-50%, -100%) scale(1.1);
-      z-index: 10;
-    }
-
-    .marker-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      .marker-label {
-        background: white;
-        border: 1px solid var(--c-gray-200);
-        padding: 0.25rem 0.75rem;
-        border-radius: 999px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: var(--c-gray-800);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        white-space: nowrap;
-        margin-bottom: 0.25rem;
-        transition: all 0.2s;
-
-        &.selected {
-          background: var(--c-emerald-600);
-          color: white;
-          border-color: var(--c-emerald-600);
-        }
-      }
-
-      .marker-pin {
-        width: 2rem;
-        height: 2rem;
-        background: #ef4444;
-        /* red-500 */
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-        transition: all 0.2s;
-
-        ion-icon {
-          color: white;
-          font-size: 1.25rem;
-        }
-
-        &.selected {
-          width: 2.5rem;
-          height: 2.5rem;
-          background: var(--c-emerald-600);
-        }
-      }
-    }
-  }
-
-  .btn-center {
-    position: absolute;
-    bottom: 45%;
-    /* Adjust based on bottom sheet height */
-    right: 1rem;
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-    background: white;
-    border: none;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 5;
-
-    ion-icon {
-      font-size: 1.5rem;
-      color: var(--c-emerald-600);
-    }
+  ion-icon {
+    font-size: 1.5rem;
+    color: var(--c-emerald-600);
   }
 }
 
@@ -115,7 +47,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  z-index: 20;
+  z-index: 1000;
 
   .control-btn {
     background: white;
@@ -185,7 +117,7 @@
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   width: 12rem;
   overflow: hidden;
-  z-index: 30;
+  z-index: 1010;
 
   button {
     width: 100%;
@@ -240,7 +172,7 @@
   border-radius: 1rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   padding: 1rem;
-  z-index: 30;
+  z-index: 1010;
 
   .panel-header {
     display: flex;
@@ -302,7 +234,7 @@
   height: 45%;
   display: flex;
   flex-direction: column;
-  z-index: 20;
+  z-index: 1000;
   animation: slideUp 0.3s ease-out;
 
   .sheet-handle {

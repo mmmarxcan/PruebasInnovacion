@@ -14,20 +14,31 @@
     z-index: 10;
 
     .btn-back {
-        width: 2.5rem;
         height: 2.5rem;
+        padding: 0 1rem;
         display: flex;
         align-items: center;
-        justify-content: center;
-        border-radius: 50%;
+        gap: 0.5rem;
+        border-radius: 2rem;
         background: white;
         border: none;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         cursor: pointer;
+        transition: transform 0.2s;
+
+        &:active {
+            transform: scale(0.95);
+        }
 
         ion-icon {
-            font-size: 1.5rem;
-            color: var(--c-gray-700);
+            font-size: 1.25rem;
+            color: var(--c-purple-600);
+        }
+
+        .back-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--c-purple-700);
         }
     }
 }
@@ -338,45 +349,39 @@
 }
 
 .bottom-actions {
-    padding: 1.5rem;
-    background: white;
-    border-top: 1px solid var(--c-gray-100);
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    background: transparent;
 
-    .btn-next {
-        width: 100%;
-        background: linear-gradient(to right, var(--c-purple-500), var(--c-purple-600));
-        color: white;
-        padding: 1rem;
-        border-radius: 1rem;
-        font-weight: 600;
-        font-size: 1rem;
+    .btn-text-back {
+        background: none;
         border: none;
+        color: var(--c-purple-600);
+        font-weight: 500;
+        font-size: 0.95rem;
+        text-decoration: underline;
+        padding: 0.5rem 1rem;
         cursor: pointer;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        transition: all 0.2s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-
-        &:hover {
-            box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.2);
-            opacity: 0.95;
-        }
-
+        
         &:active {
-            transform: scale(0.98);
-        }
-
-        &:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
-        }
-
-        ion-icon {
-            font-size: 1.25rem;
+            opacity: 0.7;
         }
     }
 }
+
+/* Animations */
+.fade-in-up {
+    animation: fadeInUp 0.4s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

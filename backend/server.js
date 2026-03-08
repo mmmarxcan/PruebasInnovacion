@@ -70,16 +70,26 @@ app.get('/api/restaurantes', (req, res) => {
     });
 });
 
+// GET: Categorias Únicas
+app.get('/api/categorias', (req, res) => {
+    const q = "SELECT DISTINCT categoria FROM restaurantes WHERE categoria IS NOT NULL AND estado = 'active' LIMIT 15";
+    db.query(q, (err, result) => {
+        if (err) return res.status(500).json(err);
+        return res.json(result.rows.map(row => row.categoria));
+    });
+});
+
 // POST: Crear Restaurante (Admin/Dueño)
 app.post('/api/restaurantes', (req, res) => {
-    const q = "INSERT INTO restaurantes (nombre, categoria, direccion, latitud, longitud, estado) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id";
+    const q = "INSERT INTO restaurantes (nombre, categoria, direccion, latitud, longitud, estado, ambiente) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id";
     const values = [
         req.body.nombre,
         req.body.categoria,
         req.body.direccion,
         req.body.latitud,
         req.body.longitud,
-        'pending' // Por defecto pendiente
+        'pending', // Por defecto pendiente
+        req.body.ambiente
     ];
 
     db.query(q, values, (err, result) => {
@@ -112,7 +122,7 @@ app.get('/api/restaurantes/:id', (req, res) => {
 
 // PUT: Actualizar Restaurante
 app.put('/api/restaurantes/:id', (req, res) => {
-    const q = "UPDATE restaurantes SET nombre=$1, categoria=$2, direccion=$3, telefono=$4, website=$5, foto_portada=$6, latitud=$7, longitud=$8, manual_cerrado=$9 WHERE id=$10";
+    const q = "UPDATE restaurantes SET nombre=$1, categoria=$2, direccion=$3, telefono=$4, website=$5, foto_portada=$6, latitud=$7, longitud=$8, manual_cerrado=$9, ambiente=$10 WHERE id=$11";
     const values = [
         req.body.nombre,
         req.body.categoria,
@@ -123,6 +133,7 @@ app.put('/api/restaurantes/:id', (req, res) => {
         req.body.latitud,
         req.body.longitud,
         req.body.manual_cerrado,
+        req.body.ambiente,
         req.params.id
     ];
     db.query(q, values, (err, data) => {

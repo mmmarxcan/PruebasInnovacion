@@ -10,8 +10,9 @@ CREATE TABLE IF NOT EXISTS restaurantes (
     direccion TEXT,
     latitud DOUBLE PRECISION, -- Cambiado de VARCHAR a DOUBLE PRECISION
     longitud DOUBLE PRECISION, -- Cambiado de VARCHAR a DOUBLE PRECISION
-    rating_promedio DECIMAL(2, 1) DEFAULT 0,
+    rating_promedio DECIMAL(2, 1) DEFAULT 5.0,
     nivel_precio VARCHAR(10),
+    ambiente VARCHAR(50),
     telefono VARCHAR(50),
     website VARCHAR(255),
     foto_portada VARCHAR(255),

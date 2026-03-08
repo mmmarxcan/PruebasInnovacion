@@ -1,28 +1,13 @@
 <ion-content [fullscreen]="true">
   <div class="map-container">
 
-    <!-- Map Area (Simulated) -->
-    <div class="map-area">
+    <!-- Real Leaflet Map -->
+    <div id="leaflet-map" style="width: 100%; height: 100%; z-index: 1;"></div>
 
-      <!-- Markers -->
-      <button *ngFor="let place of restaurants" class="map-marker" [style.top]="place.position.top"
-        [style.left]="place.position.left" (click)="handleMarkerClick(place)">
-
-        <div class="marker-content" [class.selected]="selectedRestaurant?.id === place.id">
-          <div class="marker-label" [class.selected]="selectedRestaurant?.id === place.id">
-            {{ place.name }}
-          </div>
-          <div class="marker-pin" [class.selected]="selectedRestaurant?.id === place.id">
-            <ion-icon name="location-outline"></ion-icon>
-          </div>
-        </div>
-      </button>
-
-      <!-- Center Button -->
-      <button class="btn-center" (click)="centerOnUser()">
-        <ion-icon name="navigate-outline"></ion-icon>
-      </button>
-    </div>
+    <!-- Center Button -->
+    <button class="btn-center" (click)="centerOnUser()">
+      <ion-icon name="navigate-outline"></ion-icon>
+    </button>
 
     <!-- Top UI -->
     <div class="top-controls">

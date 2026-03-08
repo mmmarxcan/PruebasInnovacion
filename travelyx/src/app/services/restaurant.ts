@@ -27,6 +27,10 @@ export class RestaurantService {
     return this.http.put(`${this.apiUrl}/restaurantes/${id}`, data);
   }
 
+  getCategories(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/categorias`);
+  }
+
   // --- MENU ---
 
   getMenu(restaurantId: number): Observable<any[]> {

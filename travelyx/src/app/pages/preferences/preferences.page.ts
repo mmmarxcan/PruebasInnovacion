@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonButton } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
+import { RestaurantService } from '../../services/restaurant';
 import { addIcons } from 'ionicons';
 import {
   arrowBackOutline,
@@ -17,7 +18,10 @@ import {
   homeOutline,
   checkmarkCircle,
   chevronForwardOutline,
-  sparklesOutline
+  sparklesOutline,
+  fastFoodOutline,
+  basketOutline,
+  sunnyOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -29,18 +33,11 @@ import {
 })
 export class PreferencesPage implements OnInit {
   currentStep = 1;
-  selectedFoodTypes: string[] = [];
+  selectedFoodType: string = '';
   selectedBudget: string = '';
-  selectedPlaceTypes: string[] = [];
+  selectedPlaceType: string = '';
 
-  foodTypes = [
-    { id: 'italian', label: 'Italiana', icon: 'pizza-outline' },
-    { id: 'mexican', label: 'Mexicana', icon: 'restaurant-outline' },
-    { id: 'asian', label: 'Asiática', icon: 'fish-outline' },
-    { id: 'vegetarian', label: 'Vegetariana', icon: 'leaf-outline' },
-    { id: 'cafe', label: 'Café', icon: 'cafe-outline' },
-    { id: 'dessert', label: 'Postres', icon: 'ice-cream-outline' },
-  ];
+  foodTypes: { id: string, label: string, icon: string }[] = [];
 
   budgetOptions = [
     { id: 'low', label: 'Económico', symbol: '$', description: 'Menos de $15' },
@@ -55,7 +52,7 @@ export class PreferencesPage implements OnInit {
     { id: 'familyfriendly', label: 'Familiar', icon: 'home-outline' },
   ];
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private restaurantService: RestaurantService) {
     addIcons({
       arrowBackOutline,
       pizzaOutline,
@@ -69,31 +66,91 @@ export class PreferencesPage implements OnInit {
       homeOutline,
       checkmarkCircle,
       chevronForwardOutline,
-      sparklesOutline
+      sparklesOutline,
+      fastFoodOutline,
+      basketOutline,
+      sunnyOutline
     });
   }
 
   ngOnInit() {
+    this.loadDynamicCategories();
+  }
+
+  loadDynamicCategories() {
+    this.restaurantService.getCategories().subscribe({
+      next: (categories: string[]) => {
+        // Map common strings to icons. Fallback to restaurant-outline for unknowns.
+        const iconMap: { [key: string]: string } = {
+          'italiana': 'wine-outline',
+          'pizzería': 'pizza-outline',
+          'pizzeria': 'pizza-outline',
+          'mexicana': 'restaurant-outline',
+          'asiática': 'restaurant-outline',
+          'asiatica': 'restaurant-outline',
+          'vegetariana': 'leaf-outline',
+          'café': 'cafe-outline',
+          'cafe': 'cafe-outline',
+          'postres': 'ice-cream-outline',
+          'rápida': 'fast-food-outline',
+          'rapida': 'fast-food-outline',
+          'hamburguesas': 'fast-food-outline',
+          'mariscos': 'fish-outline',
+          'panadería': 'basket-outline',
+          'panaderia': 'basket-outline',
+          'caribbean': 'sunny-outline',
+          'caribeña': 'sunny-outline'
+        };
+
+        this.foodTypes = categories.map(cat => {
+          const lowerCat = cat.toLowerCase().trim();
+          return {
+            id: lowerCat,           // use lowercased name as ID
+            label: cat,             // display original name
+            icon: iconMap[lowerCat] || 'restaurant-outline' // generic icon if not mapped
+          };
+        });
+
+        // Always ensure a fallback if DB is empty or has no categories yet
+        if (this.foodTypes.length === 0) {
+          this.foodTypes = [
+             { id: 'general', label: 'Cualquiera', icon: 'restaurant-outline' }
+          ];
+        }
+      },
+      error: (err) => {
+        console.error('Error loading categories:', err);
+        // Fallback data if backend fails
+        this.foodTypes = [
+          { id: 'mexicana', label: 'Mexicana (Fallback)', icon: 'restaurant-outline' }
+        ];
+      }
+    });
   }
 
   toggleFoodType(id: string) {
-    if (this.selectedFoodTypes.includes(id)) {
-      this.selectedFoodTypes = this.selectedFoodTypes.filter(t => t !== id);
-    } else {
-      this.selectedFoodTypes = [...this.selectedFoodTypes, id];
-    }
+    this.selectedFoodType = id;
+    this.autoAdvance();
   }
 
   selectBudget(id: string) {
     this.selectedBudget = id;
+    this.autoAdvance();
   }
 
   togglePlaceType(id: string) {
-    if (this.selectedPlaceTypes.includes(id)) {
-      this.selectedPlaceTypes = this.selectedPlaceTypes.filter(t => t !== id);
-    } else {
-      this.selectedPlaceTypes = [...this.selectedPlaceTypes, id];
-    }
+    this.selectedPlaceType = id;
+    this.autoAdvance();
+  }
+
+  autoAdvance() {
+    setTimeout(() => {
+      if (this.currentStep < 3) {
+        this.currentStep++;
+      } else {
+        this.completePreferences();
+      }
+    }, 450); // 450ms delay to show the selection feedback visually before advancing
   }
 
   handleBack() {
@@ -105,34 +162,35 @@ export class PreferencesPage implements OnInit {
     }
   }
 
-  handleNext() {
-    if (this.currentStep < 2) {
-      this.currentStep++;
-    } else {
-      this.completePreferences();
-    }
-  }
-
   canContinue(): boolean {
-    if (this.currentStep === 1) return this.selectedFoodTypes.length > 0;
-    // Step 2 now requires both budget and place type
-    if (this.currentStep === 2) return this.selectedBudget !== '' && this.selectedPlaceTypes.length > 0;
+    if (this.currentStep === 1) return this.selectedFoodType !== '';
+    if (this.currentStep === 2) return this.selectedBudget !== '';
+    if (this.currentStep === 3) return this.selectedPlaceType !== '';
     return false;
   }
 
   getPollyMessage(): string {
     if (this.currentStep === 1) return "¡Hola! Soy Polly 🐙. Ayúdame a conocerte mejor. ¿Qué tipo de comida te gusta?";
-    if (this.currentStep === 2) return "¡Entendido! Ahora selecciona tu presupuesto y el ambiente que prefieres.";
+    if (this.currentStep === 2) return "¡Entendido! Ahora, ¿cuánto tienes pensado gastar?";
+    if (this.currentStep === 3) return "¡Casi listos! Por último, elige el ambiente que prefieres para hoy.";
     return "";
   }
 
   completePreferences() {
     console.log('Preferences completed:', {
-      food: this.selectedFoodTypes,
+      food: this.selectedFoodType,
       budget: this.selectedBudget,
-      place: this.selectedPlaceTypes
+      place: this.selectedPlaceType
     });
-    // Navigate to Recommendations (Home)
-    this.router.navigateByUrl('/home');
+    // Navigate to Recommendations (Home) with state
+    this.router.navigate(['/home'], {
+      state: {
+        preferences: {
+          food: this.selectedFoodType,
+          budget: this.selectedBudget,
+          place: this.selectedPlaceType
+        }
+      }
+    });
   }
 }

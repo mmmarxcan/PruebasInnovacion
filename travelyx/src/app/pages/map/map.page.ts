@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonButton } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
+import * as L from 'leaflet';
 import { addIcons } from 'ionicons';
 import {
   locationOutline,
@@ -21,12 +22,11 @@ interface Restaurant {
   type: string;
   rating: number;
   priceLevel: string;
-  distance: string;
-  address: string;
+  distance?: string; // Optativo por ahora, calculable luego
+  description: string;
   lat: number;
   lng: number;
-  image: string;
-  position: { top: string, left: string }; // Custom position for CSS map
+  image?: string;
 }
 
 @Component({
@@ -36,92 +36,25 @@ interface Restaurant {
   standalone: true,
   imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonButton, CommonModule, FormsModule]
 })
-export class MapPage implements OnInit {
+export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   selectedRestaurant: Restaurant | null = null;
   showFilters = false;
   showMenu = false;
   showBottomSheet = false;
 
-  restaurants: Restaurant[] = [
-    {
-      id: 1,
-      name: "La Trattoria Bella",
-      type: "Italiana",
-      rating: 4.8,
-      priceLevel: "$$",
-      distance: "0.5 km",
-      address: "Calle Principal 123",
-      lat: 40.7128,
-      lng: -74.0060,
-      image: "https://images.unsplash.com/photo-1722587561829-8a53e1935e20?auto=format&fit=crop&w=400&q=80",
-      position: { top: '30%', left: '40%' }
-    },
-    {
-      id: 2,
-      name: "Tacos El Güero",
-      type: "Mexicana",
-      rating: 4.6,
-      priceLevel: "$",
-      distance: "0.8 km",
-      address: "Av. Reforma 456",
-      lat: 40.7138,
-      lng: -74.0070,
-      image: "https://images.unsplash.com/photo-1666307551254-eacbfaff5369?auto=format&fit=crop&w=400&q=80",
-      position: { top: '50%', left: '60%' }
-    },
-    {
-      id: 3,
-      name: "Sushi Zen",
-      type: "Asiática",
-      rating: 4.9,
-      priceLevel: "$$$",
-      distance: "1.2 km",
-      address: "Plaza Central 789",
-      lat: 40.7118,
-      lng: -74.0050,
-      image: "https://images.unsplash.com/photo-1634881091116-1876b8c2b414?auto=format&fit=crop&w=400&q=80",
-      position: { top: '45%', left: '25%' }
-    },
-    {
-      id: 4,
-      name: "Green Garden",
-      type: "Vegetariana",
-      rating: 4.7,
-      priceLevel: "$$",
-      distance: "0.3 km",
-      address: "Paseo Verde 321",
-      lat: 40.7148,
-      lng: -74.0065,
-      image: "https://images.unsplash.com/photo-1643750182373-b4a55a8c2801?auto=format&fit=crop&w=400&q=80",
-      position: { top: '65%', left: '45%' }
-    },
-    {
-      id: 5,
-      name: "Café Bohème",
-      type: "Café",
-      rating: 4.5,
-      priceLevel: "$",
-      distance: "0.6 km",
-      address: "Calle Artista 654",
-      lat: 40.7108,
-      lng: -74.0055,
-      image: "https://images.unsplash.com/photo-1739723745132-97df9db49db2?auto=format&fit=crop&w=400&q=80",
-      position: { top: '35%', left: '70%' }
-    },
-    {
-      id: 6,
-      name: "Sweet Dreams",
-      type: "Postres",
-      rating: 4.9,
-      priceLevel: "$$",
-      distance: "1.0 km",
-      address: "Boulevard Dulce 987",
-      lat: 40.7158,
-      lng: -74.0045,
-      image: "https://images.unsplash.com/photo-1496890607984-d27fca8a68ad?auto=format&fit=crop&w=400&q=80",
-      position: { top: '55%', left: '35%' }
-    },
-  ];
+  restaurants: Restaurant[] = [];
+  map: L.Map | undefined;
+  markers: L.Marker[] = [];
+
+  // Default Leaflet icon path fix for Angular
+  customIcon = L.icon({
+    iconUrl: 'assets/marker-icon.png',
+    shadowUrl: 'assets/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
 
   constructor(private router: Router) {
     addIcons({
@@ -134,9 +67,78 @@ export class MapPage implements OnInit {
       navigateOutline,
       star
     });
+    const nav = this.router.getCurrentNavigation();
+    if (nav?.extras.state && nav.extras.state['restaurants']) {
+      this.restaurants = nav.extras.state['restaurants'];
+      console.log('Map received restaurants:', this.restaurants);
+    }
   }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit() {
+    this.initMap();
+  }
+
+  ngOnDestroy() {
+    if (this.map) {
+      this.map.remove();
+    }
+  }
+
+  initMap() {
+    // Default to Progreso Coordinates if no restaurants
+    let centerLat = 21.2842;
+    let centerLng = -89.6547;
+    let initialZoom = 13;
+
+    if (this.restaurants.length > 0 && this.restaurants[0].lat && this.restaurants[0].lng) {
+      centerLat = Number(this.restaurants[0].lat);
+      centerLng = Number(this.restaurants[0].lng);
+      initialZoom = 15;
+    }
+
+    this.map = L.map('leaflet-map', {
+      zoomControl: false // Ocultamos el zoom por defecto para usar diseño custom si es necesario
+    }).setView([centerLat, centerLng], initialZoom);
+
+    // Add specific OSM Tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(this.map);
+
+    // Fix for Leaflet tile loading bug in Ionic/Angular life cycles
+    setTimeout(() => {
+      this.map?.invalidateSize();
+    }, 400);
+
+    this.addMarkersToMap();
+  }
+
+  addMarkersToMap() {
+    if (!this.map) return;
+
+    this.restaurants.forEach(restaurant => {
+      // Validate coordinates
+      if (!restaurant.lat || !restaurant.lng) return;
+
+      const marker = L.marker([Number(restaurant.lat), Number(restaurant.lng)], {
+        icon: this.customIcon
+      }).addTo(this.map!);
+
+      // Popup
+      marker.bindPopup(`<b>${restaurant.name}</b><br>${restaurant.type}`);
+
+      // Interactivity
+      marker.on('click', () => {
+        // Need to run inside Angular Zone manually or just let ng zone pick it up (click event is outside)
+        this.handleMarkerClick(restaurant);
+      });
+
+      this.markers.push(marker);
+    });
   }
 
   handleMarkerClick(restaurant: Restaurant) {
@@ -156,6 +158,13 @@ export class MapPage implements OnInit {
 
   centerOnUser() {
     console.log('Centering on user');
+    if (this.map && this.restaurants.length > 0) {
+      // Recenter Map based on first restaurant or keep it interactive
+      const first = this.restaurants[0];
+      if (first.lat && first.lng) {
+        this.map.setView([Number(first.lat), Number(first.lng)], 15);
+      }
+    }
   }
 
   backToWelcome() {

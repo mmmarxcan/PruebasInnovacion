@@ -5,6 +5,7 @@
     <div class="header-overlay">
       <button class="btn-back" (click)="handleBack()">
         <ion-icon name="arrow-back-outline"></ion-icon>
+        <span class="back-text">Atrás</span>
       </button>
     </div>
 
@@ -38,7 +39,7 @@
       <!-- Progress Indicators -->
       <div class="progress-bar">
         <div class="step-indicator" [class.active]="step === currentStep" [class.completed]="step < currentStep"
-          *ngFor="let step of [1, 2]">
+          *ngFor="let step of [1, 2, 3]">
         </div>
       </div>
     </div>
@@ -47,23 +48,21 @@
     <div class="content-area">
 
       <!-- Step 1: Food Type -->
-      <div *ngIf="currentStep === 1" class="step-content">
+      <div *ngIf="currentStep === 1" class="step-content fade-in-up">
         <h3>Tipo de comida</h3>
-        <p class="subtitle">Selecciona tus favoritas</p>
+        <p class="subtitle">Selecciona tu favorita</p>
 
         <div class="options-grid">
           <button *ngFor="let food of foodTypes" class="option-card"
-            [class.selected]="selectedFoodTypes.includes(food.id)" (click)="toggleFoodType(food.id)">
+            [class.selected]="selectedFoodType === food.id" (click)="toggleFoodType(food.id)">
             <ion-icon [name]="food.icon" class="option-icon"></ion-icon>
             <span class="option-label">{{ food.label }}</span>
           </button>
         </div>
       </div>
 
-      <!-- Step 2: Budget & Place Type Combined -->
-      <div *ngIf="currentStep === 2" class="step-content">
-
-        <!-- Budget Section -->
+      <!-- Step 2: Budget -->
+      <div *ngIf="currentStep === 2" class="step-content fade-in-up">
         <div class="section-block">
           <h3>Presupuesto</h3>
           <p class="subtitle">¿Cuánto quieres gastar?</p>
@@ -84,32 +83,31 @@
             </button>
           </div>
         </div>
+      </div>
 
-        <!-- Place Type Section -->
-        <div class="section-block" style="margin-top: 2rem;">
+      <!-- Step 3: Place Type -->
+      <div *ngIf="currentStep === 3" class="step-content fade-in-up">
+        <div class="section-block">
           <h3>Tipo de lugar</h3>
           <p class="subtitle">Ambiente preferido</p>
 
           <div class="options-grid">
             <button *ngFor="let place of placeTypes" class="option-card"
-              [class.selected]="selectedPlaceTypes.includes(place.id)" (click)="togglePlaceType(place.id)">
+              [class.selected]="selectedPlaceType === place.id" (click)="togglePlaceType(place.id)">
               <ion-icon [name]="place.icon" class="option-icon"></ion-icon>
               <span class="option-label">{{ place.label }}</span>
             </button>
           </div>
         </div>
-
       </div>
 
     </div>
 
-    <!-- Bottom Actions -->
-    <div class="bottom-actions">
-      <button class="btn-next" (click)="handleNext()" [disabled]="!canContinue()">
-        <span *ngIf="currentStep < 2">Siguiente</span>
-        <span *ngIf="currentStep === 2">Ver recomendaciones</span>
-        <ion-icon name="chevron-forward-outline" *ngIf="currentStep < 2"></ion-icon>
-      </button>
+    <!-- Extra Back Link for Steps 2 & 3 -->
+    <div class="bottom-actions" *ngIf="currentStep > 1">
+        <button class="btn-text-back" (click)="handleBack()">
+           Volver al paso anterior
+        </button>
     </div>
 
   </div>
