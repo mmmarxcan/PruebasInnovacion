@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel,
   IonThumbnail, IonButton, IonIcon, IonButtons, IonBackButton, IonFab, IonFabButton,
-  IonModal, IonItemDivider, IonInput, IonTextarea, IonSelect, IonSelectOption
+  IonModal, IonItemDivider, IonInput, IonTextarea, IonSelect, IonSelectOption, IonSpinner
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { addOutline, trashOutline, pizzaOutline } from 'ionicons/icons';
+import { addOutline, trashOutline, pizzaOutline, createOutline, cloudUploadOutline } from 'ionicons/icons';
 import { RestaurantService } from '../../../services/restaurant';
+import { AuthService } from '../../../services/auth';
 
 @Component({
   selector: 'app-menu',
@@ -18,18 +19,21 @@ import { RestaurantService } from '../../../services/restaurant';
   imports: [
     IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel,
     IonThumbnail, IonButton, IonIcon, IonButtons, IonBackButton, IonFab, IonFabButton,
-    IonModal, IonItemDivider, IonInput, IonTextarea, IonSelect, IonSelectOption,
+    IonModal, IonItemDivider, IonInput, IonTextarea, IonSelect, IonSelectOption, IonSpinner,
     CommonModule, FormsModule
   ]
 })
 export class MenuPage implements OnInit {
 
-  restaurantId = 1; // TODO: Obtener del usuario logueado
+  restaurantId: number | null = null;
   dishes: any[] = [];
+  isLoading = false;
 
   isModalOpen = false;
-  newDish = {
-    restaurant_id: this.restaurantId,
+  isEditMode = false;
+  currentDishId: number | null = null;
+
+  dishForm = {
     nombre: '',
     descripcion: '',
     precio: 0,
@@ -37,47 +41,124 @@ export class MenuPage implements OnInit {
     foto_url: ''
   };
 
-  constructor(private restaurantService: RestaurantService) {
-    addIcons({ addOutline, trashOutline, pizzaOutline });
+  constructor(
+    private restaurantService: RestaurantService,
+    private authService: AuthService
+  ) {
+    addIcons({ addOutline, trashOutline, pizzaOutline, createOutline, cloudUploadOutline });
   }
 
   ngOnInit() {
-    this.loadMenu();
+    const user = this.authService.getCurrentUser();
+    console.log('📌 MenuPage ngOnInit - User:', user);
+    if (user && user.restaurant_id) {
+      this.restaurantId = user.restaurant_id;
+      this.loadMenu();
+    } else {
+      console.warn('⚠️ No restaurant_id found for current user');
+    }
   }
 
   loadMenu() {
-    this.restaurantService.getMenu(this.restaurantId).subscribe(data => {
-      this.dishes = data;
+    if (!this.restaurantId) return;
+    this.isLoading = true;
+    this.restaurantService.getMenu(this.restaurantId).subscribe({
+      next: (data) => {
+        this.dishes = data;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.isLoading = false;
+      }
     });
+  }
+
+  openAddModal() {
+    this.isEditMode = false;
+    this.currentDishId = null;
+    this.dishForm = {
+      nombre: '',
+      descripcion: '',
+      precio: 0,
+      categoria: 'Principal',
+      foto_url: ''
+    };
+    this.setOpen(true);
+  }
+
+  openEditModal(dish: any) {
+    this.isEditMode = true;
+    this.currentDishId = dish.id;
+    this.dishForm = {
+      nombre: dish.nombre,
+      descripcion: dish.descripcion,
+      precio: dish.precio,
+      categoria: dish.categoria,
+      foto_url: dish.foto_url
+    };
+    this.setOpen(true);
   }
 
   setOpen(isOpen: boolean) {
     this.isModalOpen = isOpen;
   }
 
-  saveDish() {
-    // Validar datos básicos
-    if (!this.newDish.nombre || !this.newDish.precio) return;
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.restaurantService.uploadImage(file).subscribe({
+        next: (res: any) => {
+          this.dishForm.foto_url = res.url;
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Error al subir imagen');
+        }
+      });
+    }
+  }
 
-    this.restaurantService.addDish(this.newDish).subscribe(() => {
-      this.loadMenu();
-      this.setOpen(false);
-      // Reset form
-      this.newDish = {
-        restaurant_id: this.restaurantId,
-        nombre: '',
-        descripcion: '',
-        precio: 0,
-        categoria: 'Principal',
-        foto_url: ''
-      };
-    });
+  saveDish() {
+    console.log('📌 saveDish clicked. Form Data:', this.dishForm);
+    console.log('📌 Current restaurantId:', this.restaurantId);
+
+    // Validation fix: Allow 0 as a valid price if needed, or at least check properly
+    if (!this.dishForm.nombre || this.dishForm.precio === null || this.dishForm.precio === undefined || !this.restaurantId) {
+      alert('Nombre, precio e ID de restaurante son obligatorios');
+      return;
+    }
+
+    if (this.isEditMode && this.currentDishId) {
+      console.log('📌 Updating dish:', this.currentDishId);
+      this.restaurantService.updateDish(this.currentDishId, this.dishForm).subscribe({
+        next: () => {
+          console.log('✅ Dish updated successfully');
+          this.loadMenu();
+          this.setOpen(false);
+        },
+        error: (err) => console.error('❌ Error updating dish:', err)
+      });
+    } else {
+      console.log('📌 Adding new dish');
+      const data = { ...this.dishForm, restaurant_id: this.restaurantId };
+      this.restaurantService.addDish(data).subscribe({
+        next: () => {
+          console.log('✅ Dish added successfully');
+          this.loadMenu();
+          this.setOpen(false);
+        },
+        error: (err) => console.error('❌ Error adding dish:', err)
+      });
+    }
   }
 
   deleteDish(id: number) {
-    this.restaurantService.deleteDish(id).subscribe(() => {
-      this.loadMenu();
-    });
+    if (confirm('¿Estás seguro de eliminar este platillo?')) {
+      this.restaurantService.deleteDish(id).subscribe(() => {
+        this.loadMenu();
+      });
+    }
   }
 
 }

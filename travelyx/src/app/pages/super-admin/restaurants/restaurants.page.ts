@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RestaurantService } from '../../../services/restaurant';
+import { SuperAdminService } from '../../../services/super-admin';
 import {
     IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel,
     IonAvatar, IonBadge, IonButton, IonIcon, IonSearchbar, IonButtons, IonBackButton,
-    IonActionSheet
+    IonSegment, IonSegmentButton
 } from '@ionic/angular/standalone';
+import { AlertController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { checkmarkCircleOutline, banOutline, ellipsisVerticalOutline, searchOutline } from 'ionicons/icons';
 
@@ -17,41 +18,21 @@ import { checkmarkCircleOutline, banOutline, ellipsisVerticalOutline, searchOutl
     standalone: true,
     imports: [
         IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel,
-        IonAvatar, IonBadge, IonButton, IonIcon, IonSearchbar, IonButtons, IonBackButton,
-        IonActionSheet, CommonModule, FormsModule
+        IonAvatar, IonButton, IonIcon, IonSearchbar, IonButtons, IonBackButton,
+        IonSegment, IonSegmentButton, CommonModule, FormsModule
     ]
 })
 export class SuperAdminRestaurantsPage implements OnInit {
 
     filteredRestaurants: any[] = [];
     restaurants: any[] = [];
-    isActionSheetOpen = false;
-    selectedRestaurant: any = null;
+    selectedSegment = 'active';
+    searchQuery = '';
 
-    public actionSheetButtons = [
-        {
-            text: 'Aprobar',
-            role: 'destructive',
-            data: {
-                action: 'approve',
-            },
-        },
-        {
-            text: 'Bloquear',
-            data: {
-                action: 'block',
-            },
-        },
-        {
-            text: 'Cancelar',
-            role: 'cancel',
-            data: {
-                action: 'cancel',
-            },
-        },
-    ];
-
-    constructor(private restaurantService: RestaurantService) {
+    constructor(
+        private superAdminService: SuperAdminService,
+        private alertController: AlertController
+    ) {
         addIcons({ checkmarkCircleOutline, banOutline, ellipsisVerticalOutline, searchOutline });
     }
 
@@ -60,32 +41,67 @@ export class SuperAdminRestaurantsPage implements OnInit {
     }
 
     loadRestaurants() {
-        this.restaurantService.getRestaurants().subscribe(data => {
-            this.restaurants = data;
-            this.filteredRestaurants = [...this.restaurants];
+        this.superAdminService.getRestaurants().subscribe({
+            next: (data) => {
+                this.restaurants = data;
+                this.applyFilters();
+            },
+            error: (err) => console.error(err)
         });
     }
 
+    onSegmentChange() {
+        this.applyFilters();
+    }
+
     filterList(event: any) {
-        const query = event.target.value.toLowerCase();
-        this.filteredRestaurants = this.restaurants.filter(r => r.name.toLowerCase().includes(query));
+        this.searchQuery = event.target.value.toLowerCase();
+        this.applyFilters();
     }
 
-    setOpen(isOpen: boolean, restaurant?: any) {
-        this.isActionSheetOpen = isOpen;
-        if (restaurant) {
-            this.selectedRestaurant = restaurant;
-        }
+    applyFilters() {
+        this.filteredRestaurants = this.restaurants.filter(r => {
+            const matchesStatus = r.estado === this.selectedSegment;
+            const matchesSearch = r.nombre.toLowerCase().includes(this.searchQuery);
+            return matchesStatus && matchesSearch;
+        });
     }
 
-    handleAction(event: any) {
-        const action = event.detail.data?.action;
-        if (action === 'approve' && this.selectedRestaurant) {
-            this.selectedRestaurant.status = 'active';
-        } else if (action === 'block' && this.selectedRestaurant) {
-            this.selectedRestaurant.status = 'blocked';
-        }
-        this.setOpen(false);
+    async updateStatus(restaurant: any, newStatus: string) {
+        const actionLabel = newStatus === 'active' ? 'Activar' : (newStatus === 'inactive' ? 'Desactivar' : 'Actualizar');
+        
+        const alert = await this.alertController.create({
+            header: 'Confirmar Acción',
+            message: `¿Estás seguro de que deseas ${actionLabel.toLowerCase()} el restaurante "${restaurant.nombre}"?`,
+            buttons: [
+                {
+                    text: 'Cancelar',
+                    role: 'cancel'
+                },
+                {
+                    text: actionLabel,
+                    handler: () => {
+                        this.processStatusUpdate(restaurant, newStatus);
+                    }
+                }
+            ]
+        });
+
+        await alert.present();
+    }
+
+    private processStatusUpdate(restaurant: any, newStatus: string) {
+        console.log('📌 Intentando cambiar estado:', { id: restaurant.id, current: restaurant.estado, target: newStatus });
+        this.superAdminService.updateRestaurantStatus(restaurant.id, newStatus).subscribe({
+            next: (resp) => {
+                console.log('✅ Cambio de estado exitoso en servidor:', resp);
+                restaurant.estado = newStatus;
+                this.applyFilters();
+            },
+            error: (err) => {
+                console.error('❌ Error al cambiar estado:', err);
+            }
+        });
     }
 
 }

@@ -7,7 +7,7 @@ Esta guía detalla paso a paso cómo configurar y ejecutar el proyecto Travelyx 
 Asegúrate de tener instalado lo siguiente antes de comenzar:
 
 *   **Node.js** (Versión LTS recomendada): [Descargar aquí](https://nodejs.org/)
-*   **MySQL Server**: [Descargar aquí](https://dev.mysql.com/downloads/installer/)
+*   **PostgreSQL**: [Descargar aquí](https://www.postgresql.org/download/)
 *   **Ionic CLI**: Instalar globalmente con el comando:
     ```bash
     npm install -g @ionic/cli
@@ -23,18 +23,20 @@ git clone <URL_DEL_REPOSITORIO>
 cd <CARPETA_DEL_PROYECTO>
 ```
 
-## 3. Configuración de Base de Datos (MySQL)
+## 3. Configuración de Base de Datos (PostgreSQL)
 
-1.  Abre tu cliente de MySQL (Workbench, phpMyAdmin, o línea de comandos).
-2.  Ejecuta el script SQL ubicado en [backend/db_setup.sql](file:///c:/Users/mmmarxcan/Desktop/PruebasInnovacion/backend/db_setup.sql).
-    *   Este script creará la base de datos `travelyx_db` y las tablas necesarias (`restaurantes`, `users`, `platillos`).
+1.  Abre tu cliente de PostgreSQL (pgAdmin, DBeaver, o línea de comandos `psql`).
+2.  Crea la base de datos `travelyx_db` si no existe.
+3.  Ejecuta el script SQL ubicado en `backend/db_setup_pg.sql`.
+    *   Este script creará las tablas necesarias (`restaurantes`, `users`, `platillos`) y habilitará la extensión `earthdistance`.
     *   También creará un usuario administrador por defecto:
         *   **Email**: `super@admin.com`
         *   **Password**: `admin123`
+4.  Asegúrate de conocer la contraseña de tu usuario `postgres` de instalación local (ej. `1234578a`).
 
 ## 4. Configuración del Backend (API)
 
-El backend es un servidor Node.js que conecta con MySQL.
+El backend es un servidor Node.js que conecta con PostgreSQL.
 
 1.  Abrir una terminal y navegar a la carpeta `backend`:
     ```bash
@@ -44,12 +46,31 @@ El backend es un servidor Node.js que conecta con MySQL.
     ```bash
     npm install
     ```
-3.  **(Opcional)** Si tu base de datos tiene contraseña (diferente a vacío) o usuario diferente a `root`, edita el archivo [server.js](file:///c:/Users/mmmarxcan/Desktop/PruebasInnovacion/backend/server.js) o crea un archivo `.env` con tus credenciales.
+3.  **Configurar credenciales (Importante)**:
+    En la carpeta `backend`, debes crear o tener un archivo llamado `.env` con las credenciales de tu instalación local de PostgreSQL. 
+    Ejemplo del contenido de `.env`:
+    ```env
+    DB_HOST=localhost
+    DB_USER=postgres
+    DB_PASSWORD=1234578a
+    DB_NAME=travelyx_db
+    DB_PORT=5432
+    PORT=3000
+    ```
+    *Asegúrate de cambiar `DB_PASSWORD` a la contraseña real de tu usuario postgres en tu computadora local.*
+
 4.  Iniciar el servidor:
     ```bash
     npm start
     ```
-    *   Deberías ver el mensaje: `🚀 Servidor corriendo en puerto 3000` y `✅ Conectado a MySQL Database`.
+    *   Deberías ver el mensaje: `🚀 Servidor corriendo en puerto 3000` y `✅ Conectado a PostgreSQL Database`.
+
+### Solución de Problemas (Troubleshooting)
+
+**Error: la autentificación password falló para el usuario «postgres»**
+Si al hacer `npm start` te sale este error, significa que la contraseña en tu archivo `.env` no coincide con la de tu instalación de PostgreSQL en la PC.
+1. Verifica que la contraseña del usuario `postgres` en pgAdmin o psql sea correcta.
+2. Si olvidaste la contraseña local, busca cómo restaurarla usando el archivo `pg_hba.conf` colocándolo en modo `trust`, reiniciar el servicio, cambiar la contraseña con `psql` (`ALTER USER postgres WITH PASSWORD 'nueva_clave';`) y devolverlo a modo `scram-sha-256`.
 
 ## 5. Configuración del Frontend (Ionic/Angular)
 

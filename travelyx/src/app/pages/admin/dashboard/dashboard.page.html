@@ -1,57 +1,84 @@
-<ion-header [translucent]="true">
+<ion-header class="dashboard-header" [translucent]="true">
     <ion-toolbar>
-        <ion-title>Dashboard Restaurante</ion-title>
+        <ion-title>Travelyx Business</ion-title>
         <ion-buttons slot="end">
-            <!-- Logout logic moved to menu or separate button -->
+            <ion-button color="danger" (click)="logout()" class="btn-logout">
+                <ion-icon name="log-out-outline" slot="icon-only"></ion-icon>
+            </ion-button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-    <div class="ion-padding">
-        <h1>Bienvenido, {{ userName }}</h1>
-
-        <!-- Estado: Sin Restaurante -->
-        <div *ngIf="!restaurantId" class="ion-text-center ion-margin-top">
-            <ion-icon name="storefront-outline" style="font-size: 4rem; color: #ccc;"></ion-icon>
-            <h3>¡Aún no tienes un restaurante!</h3>
-            <p>Da de alta tu negocio para comenzar a gestionar tu menú y recibir clientes.</p>
-            <ion-button expand="block" (click)="createRestaurant()" class="ion-margin-top">
-                <ion-icon name="add-circle-outline" slot="start"></ion-icon>
-                Dar de alta mi Restaurante
-            </ion-button>
+<ion-content class="dashboard-content" [fullscreen]="true">
+    
+    <div class="welcome-section">
+        <div class="header-content">
+            <h1 class="welcome-title">
+                Hola, <span>{{ userName }}</span>
+            </h1>
+            <p class="welcome-subtitle">Tu portal de gestión gastronómica</p>
         </div>
-
-        <!-- Estado: Con Restaurante -->
-        <div *ngIf="restaurantId">
-            <p>Gestiona <strong>{{ restaurantName }}</strong> desde aquí.</p>
-
-            <ion-grid>
-                <ion-row>
-                    <ion-col size="12" size-md="6">
-                        <ion-card button routerLink="/admin/menu">
-                            <ion-card-header>
-                                <ion-icon name="pizza-outline" size="large" color="primary"></ion-icon>
-                                <ion-card-title>Mi Menú</ion-card-title>
-                            </ion-card-header>
-                            <ion-card-content>
-                                Administra tus platillos, precios y fotos.
-                            </ion-card-content>
-                        </ion-card>
-                    </ion-col>
-                    <ion-col size="12" size-md="6">
-                        <ion-card button routerLink="/admin/restaurant-form">
-                            <ion-card-header>
-                                <ion-icon name="storefront-outline" size="large" color="secondary"></ion-icon>
-                                <ion-card-title>Mi Perfil</ion-card-title>
-                            </ion-card-header>
-                            <ion-card-content>
-                                Edita la información de tu negocio.
-                            </ion-card-content>
-                        </ion-card>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
+        
+        <!-- Estado en Vivo Card -->
+        <div *ngIf="restaurantId" class="status-live-card" [class.is-open]="isOpenedNow" [class.is-loading]="isLoadingStatus">
+            <div class="status-indicator"></div>
+            <div class="status-text">
+                <span class="label">{{ isOpenedNow ? 'ABIERTO AHORA' : 'CERRADO AHORA' }}</span>
+                <span class="sub" *ngIf="isOpenedNow && currentSchedule">Hasta las {{ currentSchedule.cierre }}</span>
+                <span class="sub" *ngIf="!isOpenedNow && !manualCerrado">Fuera de horario</span>
+                <span class="sub" *ngIf="manualCerrado">Cierre manual habilitado</span>
+            </div>
+            <div class="status-toggle">
+                <ion-toggle [checked]="manualCerrado" (ionChange)="toggleManualStatus($event)" color="danger">
+                    Cerrar local
+                </ion-toggle>
+            </div>
         </div>
     </div>
+
+    <!-- Estado: Sin Restaurante -->
+    <div *ngIf="!restaurantId" class="no-restaurant-card ion-margin">
+        <ion-icon name="restaurant-outline"></ion-icon>
+        <h3>¡Impulsa tu negocio!</h3>
+        <p>Registra tu restaurante ahora para empezar a crear tu menú digital y atraer clientes.</p>
+        <ion-button expand="block" (click)="createRestaurant()" class="btn-create ion-margin-top">
+            <ion-icon name="sparkles-outline" slot="start"></ion-icon>
+            Dar de alta mi Restaurante
+        </ion-button>
+    </div>
+
+    <!-- Estado: Con Restaurante -->
+    <div *ngIf="restaurantId">
+        <div class="ion-padding-horizontal">
+            <p style="color: #64748b; font-weight: 600; font-size: 0.9rem; margin-bottom: 1rem;">
+                ESTÁS GESTIONANDO: <span style="color: #6366f1;">{{ restaurantName | uppercase }}</span>
+            </p>
+        </div>
+
+        <ion-grid class="stats-grid">
+            <ion-row>
+                <ion-col size="12" size-md="6">
+                    <div class="menu-card" [routerLink]="['/admin/menu']">
+                        <div class="card-icon-wrapper primary">
+                            <ion-icon name="list-outline"></ion-icon>
+                        </div>
+                        <h2>Mi Menú</h2>
+                        <p>Administra platillos, precios, fotos y categorías de tu carta.</p>
+                        <ion-icon name="arrow-forward-outline" class="arrow-indicator"></ion-icon>
+                    </div>
+                </ion-col>
+                <ion-col size="12" size-md="6">
+                    <div class="menu-card" [routerLink]="['/admin/restaurant-form']">
+                        <div class="card-icon-wrapper secondary">
+                            <ion-icon name="restaurant-outline"></ion-icon>
+                        </div>
+                        <h2>Mi Perfil</h2>
+                        <p>Actualiza la ubicación, horarios y datos de contacto de tu negocio.</p>
+                        <ion-icon name="arrow-forward-outline" class="arrow-indicator"></ion-icon>
+                    </div>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </div>
+
 </ion-content>

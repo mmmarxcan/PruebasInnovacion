@@ -50,7 +50,7 @@ export const routes: Routes = [
     path: 'super-admin/restaurants',
     loadComponent: () => import('./pages/super-admin/restaurants/restaurants.page').then(m => m.SuperAdminRestaurantsPage)
   },  {
-    path: 'menu',
+    path: 'admin/menu',
     loadComponent: () => import('./pages/admin/menu/menu.page').then( m => m.MenuPage)
   },
 

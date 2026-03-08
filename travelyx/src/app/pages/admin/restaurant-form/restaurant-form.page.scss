@@ -1,95 +1,185 @@
-/* Restaurant Form Styles */
-
-.form-container {
-    padding: 1.5rem 1rem;
-    background: var(--c-gray-50);
-    min-height: 100%;
+ion-content {
+    --background: #f8f9fa;
 }
 
-.section-title {
+.div-image-upload {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-    padding-left: 0.5rem;
+    align-items: center;
+    border: 2px dashed #ccc;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 10px;
+    background: #fff;
+}
 
-    ion-icon {
-        font-size: 1.5rem;
-        color: var(--c-purple-500);
-        margin-bottom: 0.25rem;
-        display: none;
-        /* Icon optional in header */
-    }
+#mapId {
+    height: 300px;
+    width: 100%;
+    border-radius: 12px;
+    margin-top: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 1;
+}
 
-    h3 {
-        margin: 0;
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: var(--c-purple-700);
+.coords-label {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: #666;
+    text-align: center;
+}
+
+/* Import Leaflet CSS directly in component SCSS */
+@import "leaflet/dist/leaflet.css";
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 1rem;
+    letter-spacing: -0.5px;
+}
+
+/* Schedule List Styles */
+.schedule-list {
+    background: #fff;
+    border-radius: 16px;
+    padding: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    margin-bottom: 1rem;
+
+    .day-row {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-    }
+        justify-content: space-between;
+        padding: 0.8rem 1rem;
+        border-bottom: 1px solid #f1f5f9;
+        transition: opacity 0.3s ease;
 
-    p {
-        margin: 0.25rem 0 0;
-        font-size: 0.875rem;
-        color: var(--c-gray-500);
-    }
-}
-
-.form-list {
-    background: transparent;
-    padding: 0;
-
-    ion-item {
-        --background: white;
-        --border-radius: 1rem;
-        --padding-start: 1rem;
-        --inner-padding-end: 1rem;
-        margin-bottom: 0.75rem;
-        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
-
-        ion-label {
-            color: var(--c-gray-600) !important;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
+        &:last-child {
+            border-bottom: none;
         }
 
-        ion-input,
-        ion-textarea,
-        ion-select {
-            --padding-bottom: 0.5rem;
+        &.is-closed {
+            opacity: 0.6;
+            .time-inputs {
+                pointer-events: none;
+                filter: grayscale(1);
+            }
+        }
+
+        .day-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #334155;
+            width: 90px;
+        }
+
+        .time-inputs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            
+            input {
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 4px 8px;
+                font-family: inherit;
+                font-size: 0.9rem;
+                color: #1e293b;
+                outline: none;
+                &:focus {
+                    border-color: #6366f1;
+                }
+            }
+            
+            span {
+                font-size: 0.8rem;
+                color: #94a3b8;
+            }
+        }
+
+        .closed-label {
+            font-size: 0.85rem;
+            color: #ef4444;
+            font-weight: 600;
+            flex: 1;
+            text-align: center;
+        }
+
+        ion-toggle {
+            --padding-start: 10px;
         }
     }
 }
 
-.image-preview {
-    margin: 0.5rem 0 1rem;
-    border-radius: 1rem;
-    overflow: hidden;
-    height: 10rem;
-    background: var(--c-gray-200);
-    border: 2px dashed var(--c-gray-300);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-}
-
-.submit-area {
-    margin-top: 2rem;
+/* Gallery Styles */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
     margin-bottom: 2rem;
 
-    .btn-primary {
-        --background: linear-gradient(to right, var(--c-purple-500), var(--c-purple-600));
-        --border-radius: 1rem;
-        font-weight: 600;
-        height: 3.5rem;
+    .gallery-item {
+        position: relative;
+        aspect-ratio: 1;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .btn-delete {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            margin: 0;
+            --padding-start: 4px;
+            --padding-end: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            backdrop-filter: blur(4px);
+        }
     }
+
+    .add-photo-btn {
+        aspect-ratio: 1;
+        border: 2px dashed #cbd5e1;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #6366f1;
+        background: #f8faff;
+        transition: all 0.3s ease;
+
+        &:active {
+            transform: scale(0.95);
+            background: #eef2ff;
+        }
+
+        ion-icon {
+            font-size: 2rem;
+            margin-bottom: 4px;
+        }
+
+        span {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+    }
+}
+
+.btn-save-main {
+    --border-radius: 16px;
+    --padding-top: 1.2rem;
+    --padding-bottom: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
 }

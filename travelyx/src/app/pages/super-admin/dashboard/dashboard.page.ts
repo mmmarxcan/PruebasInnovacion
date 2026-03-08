@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -10,6 +10,8 @@ import { addIcons } from 'ionicons';
 import { restaurantOutline, timeOutline, peopleOutline, listOutline } from 'ionicons/icons';
 import { Router, RouterLink } from '@angular/router';
 
+import { SuperAdminService } from '../../../services/super-admin';
+
 @Component({
     selector: 'app-super-admin-dashboard',
     templateUrl: './dashboard.page.html',
@@ -17,23 +19,33 @@ import { Router, RouterLink } from '@angular/router';
     standalone: true,
     imports: [
         IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardHeader,
-        IonCardTitle, IonCardSubtitle, IonCardContent, IonGrid, IonRow, IonCol,
+        IonCardTitle, IonCardSubtitle, IonGrid, IonRow, IonCol,
         IonIcon, IonButton, IonButtons, IonBackButton, CommonModule, FormsModule, RouterLink
     ]
 })
-export class SuperAdminDashboardPage implements OnInit {
+export class SuperAdminDashboardPage {
 
-    // Mock data for dashboard
     stats = {
-        totalRestaurants: 45,
-        pendingRequests: 8,
-        activeUsers: 1240
+        activeRestaurants: 0,
+        inactiveRestaurants: 0,
+        pendingRequests: 0,
+        activeUsers: 0
     };
 
-    constructor(private router: Router) {
+    constructor(private router: Router, private superAdminService: SuperAdminService) {
         addIcons({ restaurantOutline, timeOutline, peopleOutline, listOutline });
     }
 
-    ngOnInit() {
+    ionViewWillEnter() {
+        this.loadStats();
+    }
+
+    loadStats() {
+        this.superAdminService.getStats().subscribe({
+            next: (data) => {
+                this.stats = data;
+            },
+            error: (err) => console.error(err)
+        });
     }
 }

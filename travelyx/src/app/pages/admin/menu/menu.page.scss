@@ -1,4 +1,56 @@
+.dish-card {
+    --padding-start: 0;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
 ion-thumbnail {
-    --size: 60px;
+    --size: 80px;
     --border-radius: 8px;
+    margin: 10px;
+}
+
+.category-badge {
+    background: #e0f2f1;
+    color: #00695c;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-left: 8px;
+}
+
+.price-label {
+    color: var(--ion-color-primary);
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.div-image-upload {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px dashed #ccc;
+    padding: 15px;
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    color: #999;
+    
+    ion-icon {
+        font-size: 5rem;
+        margin-bottom: 10px;
+        opacity: 0.5;
+    }
 }

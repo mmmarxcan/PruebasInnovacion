@@ -9,71 +9,95 @@
 
 <ion-content [fullscreen]="true">
 
-  <div class="ion-text-center ion-padding" *ngIf="dishes.length === 0">
-    <ion-icon name="pizza-outline" style="font-size: 4rem; color: #ccc;"></ion-icon>
+  <div class="empty-state" *ngIf="dishes.length === 0 && !isLoading">
+    <ion-icon name="pizza-outline"></ion-icon>
     <p>Aún no hay platillos en el menú.</p>
+    <ion-button fill="outline" (click)="openAddModal()">Agregar el primero</ion-button>
   </div>
 
-  <ion-list *ngIf="dishes.length > 0">
-    <ion-item *ngFor="let dish of dishes">
+  <div class="ion-text-center ion-padding" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando menú...</p>
+  </div>
+
+  <ion-list class="ion-padding" *ngIf="dishes.length > 0 && !isLoading">
+    <ion-item *ngFor="let dish of dishes" class="dish-card" lines="none">
       <ion-thumbnail slot="start">
-        <img [src]="dish.foto_url || 'https://ionicframework.com/docs/img/demos/thumbnail.svg'" />
+        <img [src]="dish.foto_url || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=100&q=80'" />
       </ion-thumbnail>
       <ion-label>
-        <h2>{{ dish.nombre }}</h2>
-        <p>{{ dish.descripcion }}</p>
-        <p><strong>${{ dish.precio }}</strong> • {{ dish.categoria }}</p>
+        <div style="display: flex; align-items: center;">
+          <h2 style="font-weight: bold; margin: 0;">{{ dish.nombre }}</h2>
+          <span class="category-badge">{{ dish.categoria }}</span>
+        </div>
+        <p style="margin: 4px 0;">{{ dish.descripcion }}</p>
+        <p class="price-label">${{ dish.precio }}</p>
       </ion-label>
-      <ion-button fill="clear" color="danger" slot="end" (click)="deleteDish(dish.id)">
-        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
-      </ion-button>
+      <ion-buttons slot="end">
+        <ion-button color="medium" (click)="openEditModal(dish)">
+          <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-button color="danger" (click)="deleteDish(dish.id)">
+          <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-buttons>
     </ion-item>
   </ion-list>
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button (click)="setOpen(true)">
+    <ion-fab-button (click)="openAddModal()">
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
-  <ion-modal [isOpen]="isModalOpen">
+  <ion-modal [isOpen]="isModalOpen" (didDismiss)="setOpen(false)">
     <ng-template>
       <ion-header>
-        <ion-toolbar>
-          <ion-title>Nuevo Platillo</ion-title>
+        <ion-toolbar color="primary">
+          <ion-title>{{ isEditMode ? 'Editar Platillo' : 'Nuevo Platillo' }}</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="setOpen(false)">Cancelar</ion-button>
+            <ion-button (click)="setOpen(false)">Cerrar</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
+        
+        <div class="div-image-upload ion-margin-bottom">
+          <input type="file" (change)="onFileSelected($event)" #fileInputDish style="display: none;">
+          <img *ngIf="dishForm.foto_url" [src]="dishForm.foto_url" style="max-height: 150px; border-radius: 8px; margin-bottom: 10px;">
+          <ion-button fill="clear" (click)="fileInputDish.click()">
+            <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+            {{ dishForm.foto_url ? 'Cambiar Foto' : 'Subir Foto del Platillo' }}
+          </ion-button>
+        </div>
+
         <ion-item>
           <ion-label position="stacked">Nombre del Platillo</ion-label>
-          <ion-input [(ngModel)]="newDish.nombre" placeholder="Ej. Tacos de Camarón"></ion-input>
+          <ion-input [(ngModel)]="dishForm.nombre" placeholder="Ej. Tacos de Camarón"></ion-input>
         </ion-item>
         <ion-item>
           <ion-label position="stacked">Descripción</ion-label>
-          <ion-textarea [(ngModel)]="newDish.descripcion" placeholder="Ingredientes, detalles..."></ion-textarea>
+          <ion-textarea [(ngModel)]="dishForm.descripcion" rows="3" placeholder="Ingredientes, detalles..."></ion-textarea>
         </ion-item>
         <ion-item>
           <ion-label position="stacked">Precio</ion-label>
-          <ion-input type="number" [(ngModel)]="newDish.precio" placeholder="0.00"></ion-input>
+          <ion-input type="number" [(ngModel)]="dishForm.precio" placeholder="0.00"></ion-input>
         </ion-item>
         <ion-item>
           <ion-label position="stacked">Categoría</ion-label>
-          <ion-select [(ngModel)]="newDish.categoria">
+          <ion-select [(ngModel)]="dishForm.categoria">
             <ion-select-option value="Entrante">Entrante</ion-select-option>
             <ion-select-option value="Principal">Principal</ion-select-option>
             <ion-select-option value="Postre">Postre</ion-select-option>
             <ion-select-option value="Bebida">Bebida</ion-select-option>
           </ion-select>
         </ion-item>
-        <ion-item>
-          <ion-label position="stacked">URL Foto (Opcional)</ion-label>
-          <ion-input [(ngModel)]="newDish.foto_url" placeholder="https://..."></ion-input>
-        </ion-item>
 
-        <ion-button expand="block" class="ion-margin-top" (click)="saveDish()">Guardar Platillo</ion-button>
+        <div class="ion-padding-top">
+          <ion-button expand="block" (click)="saveDish()">
+            {{ isEditMode ? 'Actualizar Platillo' : 'Guardar Platillo' }}
+          </ion-button>
+        </div>
       </ion-content>
     </ng-template>
   </ion-modal>

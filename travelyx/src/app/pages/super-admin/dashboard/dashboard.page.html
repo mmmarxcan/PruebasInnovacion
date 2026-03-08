@@ -21,37 +21,45 @@
 
   <ion-grid>
     <ion-row>
-      <!-- Total Restaurants Card -->
-      <ion-col size="12" size-md="4">
+      <!-- Active Restaurants -->
+      <ion-col size="6" size-md="3">
         <ion-card class="stat-card">
           <ion-card-header>
-            <ion-icon name="restaurant-outline" color="primary"></ion-icon>
-            <ion-card-subtitle>Total Restaurantes</ion-card-subtitle>
-            <ion-card-title>{{ stats.totalRestaurants }}</ion-card-title>
+            <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+            <ion-card-subtitle>Activos</ion-card-subtitle>
+            <ion-card-title>{{ stats.activeRestaurants }}</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+
+      <!-- Inactive Restaurants -->
+      <ion-col size="6" size-md="3">
+        <ion-card class="stat-card">
+          <ion-card-header>
+            <ion-icon name="ban-outline" color="danger"></ion-icon>
+            <ion-card-subtitle>Inactivos</ion-card-subtitle>
+            <ion-card-title>{{ stats.inactiveRestaurants }}</ion-card-title>
           </ion-card-header>
         </ion-card>
       </ion-col>
 
       <!-- Pending Requests Card -->
-      <ion-col size="12" size-md="4">
+      <ion-col size="6" size-md="3">
         <ion-card class="stat-card" button routerLink="/super-admin/restaurants">
           <ion-card-header>
             <ion-icon name="time-outline" color="warning"></ion-icon>
-            <ion-card-subtitle>Solicitudes Pendientes</ion-card-subtitle>
+            <ion-card-subtitle>Pendientes</ion-card-subtitle>
             <ion-card-title>{{ stats.pendingRequests }}</ion-card-title>
           </ion-card-header>
-          <ion-card-content>
-            <p>Ver listado para aprobar <ion-icon name="arrow-forward-outline"></ion-icon></p>
-          </ion-card-content>
         </ion-card>
       </ion-col>
 
-      <!-- Active Users (Mock) -->
-      <ion-col size="12" size-md="4">
+      <!-- Total Users -->
+      <ion-col size="6" size-md="3">
         <ion-card class="stat-card">
           <ion-card-header>
-            <ion-icon name="people-outline" color="success"></ion-icon>
-            <ion-card-subtitle>Usuarios Activos</ion-card-subtitle>
+            <ion-icon name="people-outline" color="primary"></ion-icon>
+            <ion-card-subtitle>Total Usuarios</ion-card-subtitle>
             <ion-card-title>{{ stats.activeUsers }}</ion-card-title>
           </ion-card-header>
         </ion-card>

@@ -10,14 +10,20 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-    <div class="analytics-container">
+    
+    <div class="ion-text-center ion-padding" *ngIf="isLoading">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Cargando estadísticas...</p>
+    </div>
+
+    <div class="analytics-container" *ngIf="!isLoading">
 
         <!-- Summary Cards Row -->
         <div class="summary-row">
             <div class="kpi-card purple">
                 <ion-icon name="trending-up-outline"></ion-icon>
-                <div class="kpi-value">1,240</div>
-                <div class="kpi-label">Vistas Totales</div>
+                <div class="kpi-value">{{ totalDishes }}</div>
+                <div class="kpi-label">Platillos en menú</div>
             </div>
             <div class="kpi-card pink">
                 <ion-icon name="people-outline"></ion-icon>

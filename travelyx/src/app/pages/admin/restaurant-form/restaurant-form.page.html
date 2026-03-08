@@ -61,10 +61,52 @@
                 </div>
             </div>
         </ion-item>
+ 
+        <ion-item lines="none">
+            <ion-label position="stacked">Ubicación en el Mapa</ion-label>
+            <div id="mapId"></div>
+            <div class="coords-label">
+                Lat: {{ restaurant.latitud }} | Lng: {{ restaurant.longitud }}
+            </div>
+        </ion-item>
 
-        <div class="ion-padding-top">
-            <ion-button expand="block" type="submit" color="secondary">
-                {{ isEditMode ? 'Actualizar Información' : 'Crear Restaurante' }}
+        <!-- Horarios Semanales -->
+        <div class="section-title ion-padding-top">Horario Semanal</div>
+        <ion-list lines="none" class="schedule-list">
+            <div *ngFor="let s of schedules; let i = index" class="day-row" [class.is-closed]="s.cerrado">
+                <div class="day-name">{{ daysOfWeek[i].name }}</div>
+                <div class="time-inputs" *ngIf="!s.cerrado">
+                    <input type="time" [(ngModel)]="s.apertura" [name]="'apertura_' + i">
+                    <span>a</span>
+                    <input type="time" [(ngModel)]="s.cierre" [name]="'cierre_' + i">
+                </div>
+                <div class="closed-label" *ngIf="s.cerrado">Cerrado</div>
+                <ion-toggle [(ngModel)]="s.cerrado" [name]="'closed_' + i" color="danger"></ion-toggle>
+            </div>
+        </ion-list>
+
+        <!-- Galería de Fotos -->
+        <div *ngIf="isEditMode">
+            <div class="section-title ion-padding-top">Galería de Fotos</div>
+            <div class="gallery-grid">
+                <div *ngFor="let img of gallery" class="gallery-item">
+                    <img [src]="img.foto_url">
+                    <ion-button fill="clear" color="danger" (click)="deletePhoto(img.id)" class="btn-delete">
+                        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+                    </ion-button>
+                </div>
+                <div class="add-photo-btn" (click)="galleryInput.click()">
+                    <ion-icon name="add-outline"></ion-icon>
+                    <span>Agregar</span>
+                </div>
+            </div>
+            <input type="file" (change)="onFileSelected($event, 'gallery')" #galleryInput style="display: none;">
+        </div>
+
+        <div class="ion-padding-top ion-margin-bottom">
+            <ion-button expand="block" type="submit" color="secondary" class="btn-save-main">
+                <ion-icon name="save-outline" slot="start"></ion-icon>
+                {{ isEditMode ? 'Actualizar Perfil' : 'Dar de Alta' }}
             </ion-button>
         </div>
     </form>
