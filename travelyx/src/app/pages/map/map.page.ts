@@ -29,6 +29,8 @@ interface Restaurant {
   image?: string;
 }
 
+import { RestaurantService } from '../../services/restaurant';
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.page.html',
@@ -56,7 +58,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     shadowSize: [41, 41]
   });
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private restaurantService: RestaurantService) {
     addIcons({
       locationOutline,
       optionsOutline,
@@ -75,6 +77,35 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
+    if (this.restaurants.length === 0) {
+      this.loadRestaurantsFromApi();
+    }
+  }
+
+  loadRestaurantsFromApi() {
+    this.restaurantService.getRestaurants().subscribe({
+      next: (data: any[]) => {
+        const filtered = data.filter(r => r.estado !== 'blocked');
+        this.restaurants = filtered.map(r => ({
+          id: r.id,
+          name: r.nombre,
+          type: r.categoria || 'Variado',
+          rating: Number(r.rating_promedio) || 5.0,
+          priceLevel: r.nivel_precio || '$$',
+          description: r.direccion || 'Excelente lugar para disfrutar.',
+          lat: Number(r.latitud),
+          lng: Number(r.longitud),
+        }));
+        // Si el mapa ya se inicializó con el demo, re-agregamos los markers y centramos
+        if (this.map) {
+          this.addMarkersToMap();
+          this.centerOnUser();
+        }
+      },
+      error: (err: any) => {
+        console.error('Error fetching restaurants', err);
+      }
+    });
   }
 
   ngAfterViewInit() {

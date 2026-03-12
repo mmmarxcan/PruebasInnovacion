@@ -119,7 +119,7 @@ export class HomePage implements OnInit {
           ];
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error fetching restaurants', err);
       }
     });
