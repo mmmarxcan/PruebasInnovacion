@@ -54,17 +54,29 @@
     </div>
 
     <!-- Bottom Sheet -->
-    <div class="bottom-sheet" *ngIf="showBottomSheet || selectedRestaurant">
+    <div class="bottom-sheet" *ngIf="showBottomSheet || selectedRestaurant" [class.navigating]="isNavigating">
       <div class="sheet-handle"></div>
 
       <div class="sheet-header">
-        <h3>Restaurantes cercanos</h3>
-        <p>{{ restaurants.length }} lugares encontrados</p>
+        <h3>{{ isNavigating ? 'En camino a' : 'Restaurantes cercanos' }}</h3>
+        <p *ngIf="!isNavigating">{{ restaurants.length }} lugares encontrados</p>
+        <p *ngIf="isNavigating">{{ selectedRestaurant?.name }}</p>
       </div>
 
       <div class="places-list">
-        <button *ngFor="let place of restaurants" class="place-item"
-          [class.active]="selectedRestaurant?.id === place.id" (click)="handleMarkerClick(place)">
+        <!-- If navigating, only show the selected one with a cancel option or just a minimal view -->
+        <div *ngIf="isNavigating && selectedRestaurant" class="navigation-info">
+          <button class="btn-cancel-nav" (click)="cancelNavigation()">
+            <ion-icon name="close-outline"></ion-icon>
+            <span>Finalizar navegación</span>
+          </button>
+        </div>
+
+        <button *ngFor="let place of restaurants" 
+          class="place-item"
+          [class.active]="selectedRestaurant?.id === place.id" 
+          [hidden]="isNavigating && selectedRestaurant?.id !== place.id"
+          (click)="handleMarkerClick(place)">
 
           <img [src]="place.image" alt="{{ place.name }}" class="place-img">
 
@@ -77,11 +89,18 @@
                 <span>{{ place.rating }}</span>
               </div>
               <span class="price">{{ place.priceLevel }}</span>
-              <span class="distance">{{ place.distance }}</span>
+            </div>
+            
+            <!-- Continuar Button only for active item -->
+            <div class="action-row" *ngIf="selectedRestaurant?.id === place.id && !isNavigating">
+              <button class="btn-continue" (click)="startNavigation(); $event.stopPropagation()">
+                <span>Continuar al mapa</span>
+                <ion-icon name="arrow-forward-outline"></ion-icon>
+              </button>
             </div>
           </div>
 
-          <div class="nav-icon">
+          <div class="nav-icon" *ngIf="!isNavigating">
             <ion-icon name="navigate-outline"></ion-icon>
           </div>
         </button>
