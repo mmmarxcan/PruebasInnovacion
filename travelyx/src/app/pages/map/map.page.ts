@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonButton } from '@ionic/angular/standalone';
@@ -30,6 +30,8 @@ interface Restaurant {
   image?: string;
 }
 
+import { RestaurantService } from '../../services/restaurant';
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.page.html',
@@ -49,6 +51,12 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   restaurants: Restaurant[] = [];
   map: L.Map | undefined;
   markers: L.Marker[] = [];
+  
+  // Navigation properties
+  isNavigating = false;
+  userLocation: L.LatLng | null = null;
+  userMarker: L.Marker | null = null;
+  routeLine: L.Polyline | null = null;
 
   // Default Leaflet icon path fix for Angular
   customIcon = L.icon({
@@ -60,7 +68,11 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     shadowSize: [41, 41]
   });
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router, 
+    private restaurantService: RestaurantService,
+    private cdr: ChangeDetectorRef
+  ) {
     addIcons({
       locationOutline,
       optionsOutline,
@@ -79,6 +91,35 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
+    if (this.restaurants.length === 0) {
+      this.loadRestaurantsFromApi();
+    }
+  }
+
+  loadRestaurantsFromApi() {
+    this.restaurantService.getRestaurants().subscribe({
+      next: (data: any[]) => {
+        const filtered = data.filter(r => r.estado !== 'blocked');
+        this.restaurants = filtered.map(r => ({
+          id: r.id,
+          name: r.nombre,
+          type: r.categoria || 'Variado',
+          rating: Number(r.rating_promedio) || 5.0,
+          priceLevel: r.nivel_precio || '$$',
+          description: r.direccion || 'Excelente lugar para disfrutar.',
+          lat: Number(r.latitud),
+          lng: Number(r.longitud),
+        }));
+        // Si el mapa ya se inicializó con el demo, re-agregamos los markers y centramos
+        if (this.map) {
+          this.addMarkersToMap();
+          this.centerOnUser();
+        }
+      },
+      error: (err: any) => {
+        console.error('Error fetching restaurants', err);
+      }
+    });
   }
 
   ngAfterViewInit() {
@@ -121,6 +162,7 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     this.addMarkersToMap();
   }
 
+<<<<<<< HEAD
   getMarkerIcon(tipo: string) {
     let color = '#ea4335'; // Red for Restaurante
     if (tipo === 'Hotel') color = '#4285f4'; // Blue
@@ -140,11 +182,78 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
 
   addMarkersToMap() {
     if (!this.map) return;
+=======
+  getUserLocation(): Promise<L.LatLng> {
+    console.log('Solicitando ubicación actual...');
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        console.error('Geolocalización no soportada por el navegador');
+        reject('Geolocation not supported');
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const latlng = L.latLng(pos.coords.latitude, pos.coords.longitude);
+          console.log('Ubicación obtenida:', latlng);
+          this.userLocation = latlng;
+          resolve(latlng);
+        },
+        (err) => {
+          console.error('Error de geolocalización:', err);
+          reject(err);
+        },
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+      );
+    });
+  }
+>>>>>>> d8c554d65427eb22383a6f575e6a28b8cec010f2
 
-    this.restaurants.forEach(restaurant => {
-      // Validate coordinates
+  async updateLocationMarker() {
+    if (!this.map) return;
+    try {
+      const latlng = await this.getUserLocation();
+      if (this.userMarker) {
+        this.userMarker.setLatLng(latlng);
+      } else {
+        const userIcon = L.divIcon({
+          className: 'user-location-marker',
+          html: '<div class="pulse"></div>',
+          iconSize: [20, 20],
+          iconAnchor: [10, 10]
+        });
+        this.userMarker = L.marker(latlng, { icon: userIcon }).addTo(this.map);
+      }
+    } catch (e) {
+      console.error('Error updating location', e);
+    }
+  }
+
+  addMarkersToMap() {
+    if (!this.map) {
+      console.warn('Mapa no inicializado aún');
+      return;
+    }
+
+    console.log('--- addMarkersToMap ---');
+    console.log('Estado - Navigating:', this.isNavigating);
+    console.log('Estado - Selected:', this.selectedRestaurant?.name);
+
+    // 1. Limpiar marcadores previos
+    this.markers.forEach(m => m.remove());
+    this.markers = [];
+
+    // 2. Determinar qué restaurantes mostrar
+    const displayList = this.isNavigating && this.selectedRestaurant 
+      ? [this.selectedRestaurant] 
+      : this.restaurants;
+
+    console.log(`Dibujando ${displayList.length} marcadores en el mapa.`);
+
+    // 3. Crear nuevos marcadores
+    displayList.forEach(restaurant => {
       if (!restaurant.lat || !restaurant.lng) return;
 
+<<<<<<< HEAD
       const placeType = restaurant.tipo || restaurant.type || 'Restaurante';
 
       const marker = L.marker([Number(restaurant.lat), Number(restaurant.lng)], {
@@ -160,8 +269,19 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
         this.handleMarkerClick(restaurant);
       });
 
+=======
+      const marker = L.marker([restaurant.lat, restaurant.lng], {
+        icon: this.customIcon
+      }).addTo(this.map!);
+
+      marker.bindPopup(`<b>${restaurant.name}</b><br>${restaurant.type}`);
+      marker.on('click', () => this.handleMarkerClick(restaurant));
+>>>>>>> d8c554d65427eb22383a6f575e6a28b8cec010f2
       this.markers.push(marker);
     });
+
+    // 4. Actualizar marcador de usuario (siempre visible)
+    this.updateLocationMarker();
   }
 
   handleMarkerClick(restaurant: Restaurant) {
@@ -189,14 +309,100 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     this.showFilters = false;
   }
 
-  centerOnUser() {
+  async centerOnUser() {
     console.log('Centering on user');
-    if (this.map && this.restaurants.length > 0) {
-      // Recenter Map based on first restaurant or keep it interactive
-      const first = this.restaurants[0];
-      if (first.lat && first.lng) {
-        this.map.setView([Number(first.lat), Number(first.lng)], 15);
+    if (!this.map) return;
+    
+    try {
+      const latlng = await this.getUserLocation();
+      this.map.setView(latlng, 15);
+      this.updateLocationMarker();
+    } catch (e) {
+      console.warn('Geolocation failed, falling back to first restaurant', e);
+      if (this.restaurants.length > 0) {
+        const first = this.restaurants[0];
+        if (first.lat && first.lng) {
+          this.map.setView([Number(first.lat), Number(first.lng)], 15);
+        }
       }
+    }
+  }
+
+  async startNavigation() {
+    console.log('>>> START NAVIGATION <<<');
+    if (!this.selectedRestaurant || !this.map) {
+      console.error('Navegación fallida: Sin restaurante seleccionado o sin mapa');
+      return;
+    }
+    
+    // Activar modo navegación
+    this.isNavigating = true;
+    this.cdr.detectChanges();
+    
+    // Forzar actualización inmediata de marcadores
+    this.addMarkersToMap();
+    
+    try {
+      this.map.invalidateSize();
+      // Intentar obtener ubicación
+      const userPos = await this.getUserLocation();
+      const destPos = L.latLng(this.selectedRestaurant.lat, this.selectedRestaurant.lng);
+      
+      console.log(`Calculando ruta desde [${userPos.lat}, ${userPos.lng}] hasta [${destPos.lat}, ${destPos.lng}]`);
+
+      // 1. Limpiar ruta anterior
+      if (this.routeLine) {
+        this.routeLine.remove();
+        this.routeLine = null;
+      }
+
+      // 2. Trazar línea recta inicial como respaldo
+      this.routeLine = L.polyline([userPos, destPos], {
+        color: '#10b981',
+        weight: 4,
+        dashArray: '5, 10',
+        opacity: 0.5
+      }).addTo(this.map);
+
+      // 3. Solicitar ruta real a OSRM
+      const url = `https://router.project-osrm.org/route/v1/walking/${userPos.lng},${userPos.lat};${destPos.lng},${destPos.lat}?overview=full&geometries=geojson`;
+      
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      
+      const data = await response.json();
+      
+      if (data.routes && data.routes.length > 0) {
+        console.log('Ruta recibida exitosamente de OSRM');
+        const coordinates = data.routes[0].geometry.coordinates.map((c: any) => [c[1], c[0]]);
+        
+        // Reemplazar línea de respaldo con ruta real
+        this.routeLine.setLatLngs(coordinates);
+        this.routeLine.setStyle({ dashArray: '', opacity: 0.8, weight: 6 });
+        
+        // Ajustar vista para incluir ambos puntos
+        const bounds = L.latLngBounds([userPos, destPos]);
+        this.map.fitBounds(bounds, { padding: [50, 50] });
+      } else {
+        console.warn('OSRM no devolvió rutas, se mantiene línea de respaldo');
+        this.map.fitBounds(this.routeLine.getBounds(), { padding: [50, 50] });
+      }
+    } catch (e) {
+      console.error('Error total en navegación:', e);
+      // Al menos intentar centrar en el restaurante si todo falla
+      this.map.setView([this.selectedRestaurant.lat, this.selectedRestaurant.lng], 15);
+    }
+  }
+
+  cancelNavigation() {
+    this.isNavigating = false;
+    if (this.routeLine) {
+      this.routeLine.remove();
+      this.routeLine = null;
+    }
+    this.addMarkersToMap();
+    if (this.selectedRestaurant) {
+      this.map?.setView([this.selectedRestaurant.lat, this.selectedRestaurant.lng], 15);
     }
   }
 
