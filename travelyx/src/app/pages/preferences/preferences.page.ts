@@ -21,7 +21,9 @@ import {
   sparklesOutline,
   fastFoodOutline,
   basketOutline,
-  sunnyOutline
+  sunnyOutline,
+  bedOutline,
+  mapOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -46,10 +48,10 @@ export class PreferencesPage implements OnInit {
   ];
 
   placeTypes = [
-    { id: 'casual', label: 'Casual', icon: 'storefront-outline' },
-    { id: 'formal', label: 'Formal', icon: 'restaurant-outline' },
-    { id: 'bar', label: 'Bar/Pub', icon: 'wine-outline' },
-    { id: 'familyfriendly', label: 'Familiar', icon: 'home-outline' },
+    { id: 'Restaurante', label: 'Restaurante', icon: 'restaurant-outline' },
+    { id: 'Hotel', label: 'Hotel', icon: 'bed-outline' },
+    { id: 'Zona Turística', label: 'Zona Turística', icon: 'map-outline' },
+    { id: 'Todos', label: 'Explorar Todo', icon: 'sparkles-outline' },
   ];
 
   constructor(private router: Router, private restaurantService: RestaurantService) {
@@ -69,7 +71,9 @@ export class PreferencesPage implements OnInit {
       sparklesOutline,
       fastFoodOutline,
       basketOutline,
-      sunnyOutline
+      sunnyOutline,
+      bedOutline,
+      mapOutline
     });
   }
 

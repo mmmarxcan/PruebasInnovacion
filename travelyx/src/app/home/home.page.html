@@ -4,29 +4,15 @@
     <!-- Polly Section -->
     <div class="polly-section">
       <!-- Octopus Character -->
-      <div class="octopus-container">
-        <div class="octopus-head">
-          <div class="eyes">
-            <div class="eye">
-              <div class="pupil"></div>
-            </div>
-            <div class="eye">
-              <div class="pupil"></div>
-            </div>
-          </div>
-          <div class="smile"></div>
-        </div>
-        <div class="tentacles">
-          <div class="tentacle" *ngFor="let i of [1,2,3,4,5,6]" [style.--i]="i"></div>
-        </div>
-        <ion-icon name="sparkles-outline" class="sparkle-icon"></ion-icon>
+      <div class="octopus-image-container small">
+        <img src="assets/polly.png" alt="Polly Mascot" class="polly-img">
       </div>
 
       <!-- Speech Bubble -->
       <div class="speech-bubble">
         <div class="tail"></div>
         <h2>¡Hola! Soy Polly 🐙</h2>
-        <p>Basándome en tus preferencias, he encontrado estos restaurantes perfectos para ti. ¡Selecciona los que te
+        <p>Basándome en lo que buscas, he encontrado estos lugares perfectos para ti. ¡Selecciona los que te
           gustaría explorar!</p>
       </div>
     </div>
@@ -74,7 +60,7 @@
     <div class="bottom-actions">
       <div class="selection-count">
         {{ selectedRestaurants.length > 0 ? selectedRestaurants.length + (selectedRestaurants.length === 1 ? '
-        restaurante seleccionado' : ' restaurantes seleccionados') : 'Selecciona al menos un restaurante' }}
+        lugar seleccionado' : ' lugares seleccionados') : 'Selecciona al menos un lugar' }}
       </div>
       <button class="btn-continue" (click)="handleContinue()" [disabled]="selectedRestaurants.length === 0">
         Continuar al mapa

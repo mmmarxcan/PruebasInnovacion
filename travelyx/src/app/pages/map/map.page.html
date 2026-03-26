@@ -9,6 +9,20 @@
       <ion-icon name="navigate-outline"></ion-icon>
     </button>
 
+    <!-- Floating Polly -->
+    <div class="floating-polly-container">
+      <div class="speech-bubble polly-bubble fade-in-up" *ngIf="showPollyTip">
+        <div class="tail"></div>
+        <button class="btn-close-tip" (click)="showPollyTip = false">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+        <p>{{ pollyMessage }}</p>
+      </div>
+      <button class="btn-polly" (click)="togglePollyTip()" [class.active]="showPollyTip">
+        <img src="assets/polly.png" alt="Polly Mascot">
+      </button>
+    </div>
+
     <!-- Top UI -->
     <div class="top-controls">
       <!-- Back Button (New) -->
@@ -70,7 +84,7 @@
 
           <div class="place-info">
             <h4>{{ place.name }}</h4>
-            <p class="type">{{ place.type }}</p>
+            <p class="type">{{ place.tipo || place.type || 'Restaurante' }}</p>
             <div class="meta-row">
               <div class="rating">
                 <ion-icon name="star"></ion-icon>

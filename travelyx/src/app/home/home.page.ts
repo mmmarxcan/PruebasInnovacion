@@ -87,10 +87,13 @@ export class HomePage implements OnInit {
           }
         }
 
-        // 3. Filter by Place/Ambiance (nuevo campo 'ambiente')
-        if (this.preferences && this.preferences.place) {
+        // 3. Filter by Place Type (nuevo campo 'tipo')
+        if (this.preferences && this.preferences.place && this.preferences.place !== 'Todos') {
           const placePref = this.preferences.place.toLowerCase().trim();
-          const placeMatches = filtered.filter(r => r.ambiente && r.ambiente.toLowerCase().trim() === placePref);
+          const placeMatches = filtered.filter(r => {
+            const t = (r.tipo || 'restaurante').toLowerCase().trim();
+            return t === placePref;
+          });
           if (placeMatches.length > 0) {
             filtered = placeMatches;
           }
@@ -100,7 +103,7 @@ export class HomePage implements OnInit {
         this.recommendedRestaurants = filtered.slice(0, 10).map(r => ({
           id: r.id,
           name: r.nombre,
-          type: r.categoria || 'Variado',
+          type: r.tipo || r.categoria || 'Variado',
           rating: Number(r.rating_promedio) || 5.0,
           priceLevel: r.nivel_precio || '$$',
           description: r.direccion || 'Excelente lugar para disfrutar.',

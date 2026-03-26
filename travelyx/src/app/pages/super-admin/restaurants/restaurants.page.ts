@@ -18,7 +18,7 @@ import { checkmarkCircleOutline, banOutline, ellipsisVerticalOutline, searchOutl
     standalone: true,
     imports: [
         IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel,
-        IonAvatar, IonButton, IonIcon, IonSearchbar, IonButtons, IonBackButton,
+        IonAvatar, IonBadge, IonButton, IonIcon, IonSearchbar, IonButtons, IonBackButton,
         IonSegment, IonSegmentButton, CommonModule, FormsModule
     ]
 })

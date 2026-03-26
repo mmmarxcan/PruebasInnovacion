@@ -19,7 +19,8 @@ import {
 interface Restaurant {
   id: number;
   name: string;
-  type: string;
+  tipo?: string;
+  type?: string;
   rating: number;
   priceLevel: string;
   distance?: string; // Optativo por ahora, calculable luego
@@ -41,6 +42,9 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   showFilters = false;
   showMenu = false;
   showBottomSheet = false;
+  
+  showPollyTip = true;
+  pollyMessage = '¡Toca un marcador en el mapa para ver los detalles del lugar!';
 
   restaurants: Restaurant[] = [];
   map: L.Map | undefined;
@@ -117,6 +121,23 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
     this.addMarkersToMap();
   }
 
+  getMarkerIcon(tipo: string) {
+    let color = '#ea4335'; // Red for Restaurante
+    if (tipo === 'Hotel') color = '#4285f4'; // Blue
+    if (tipo === 'Zona Turística') color = '#34a853'; // Green
+    
+    // SVG Marker
+    const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}" width="30px" height="30px"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>`;
+    
+    return L.divIcon({
+      className: 'custom-div-icon',
+      html: svgIcon,
+      iconSize: [30, 30],
+      iconAnchor: [15, 30],
+      popupAnchor: [0, -30]
+    });
+  }
+
   addMarkersToMap() {
     if (!this.map) return;
 
@@ -124,12 +145,14 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
       // Validate coordinates
       if (!restaurant.lat || !restaurant.lng) return;
 
+      const placeType = restaurant.tipo || restaurant.type || 'Restaurante';
+
       const marker = L.marker([Number(restaurant.lat), Number(restaurant.lng)], {
-        icon: this.customIcon
+        icon: this.getMarkerIcon(placeType)
       }).addTo(this.map!);
 
       // Popup
-      marker.bindPopup(`<b>${restaurant.name}</b><br>${restaurant.type}`);
+      marker.bindPopup(`<b>${restaurant.name}</b><br>${placeType}`);
 
       // Interactivity
       marker.on('click', () => {
@@ -144,6 +167,16 @@ export class MapPage implements OnInit, AfterViewInit, OnDestroy {
   handleMarkerClick(restaurant: Restaurant) {
     this.selectedRestaurant = restaurant;
     this.showBottomSheet = true;
+    
+    // Polly interacts based on selection
+    if (restaurant.name) {
+      this.pollyMessage = `¡Excelente elección! "${restaurant.name}" es un gran lugar.`;
+      this.showPollyTip = true;
+    }
+  }
+
+  togglePollyTip() {
+    this.showPollyTip = !this.showPollyTip;
   }
 
   toggleFilters() {

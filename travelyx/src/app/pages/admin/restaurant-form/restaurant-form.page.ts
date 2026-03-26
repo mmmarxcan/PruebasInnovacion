@@ -37,7 +37,8 @@ export class RestaurantFormPage implements OnInit {
         website: '',
         foto_portada: '',
         latitud: '21.2829', // Default Progreso center aprox
-        longitud: '-89.6644'
+        longitud: '-89.6644',
+        tipo: 'Restaurante'
     };
 
     isEditMode = false;

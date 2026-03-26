@@ -4,7 +4,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(to bottom, var(--c-purple-50), #ffffff);
+  background: linear-gradient(to bottom, rgba(236, 254, 255, 0.6), #ffffff, rgba(250, 245, 255, 0.6));
 }
 
 .polly-section {
@@ -13,83 +13,30 @@
   flex-direction: column;
   align-items: center;
 
-  .octopus-container {
-    position: relative;
-    margin-bottom: 1rem;
+  .octopus-image-container {
     width: 8rem;
     height: 8rem;
+    margin-bottom: 0.5rem;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.2), 0 4px 6px -4px rgba(168, 85, 247, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    animation: float 4s ease-in-out infinite;
 
-    .octopus-head {
+    .polly-img {
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, var(--c-purple-500), var(--c-purple-600));
-      border-radius: 50%;
-      position: relative;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.4);
-
-      .eyes {
-        display: flex;
-        gap: 1rem;
-        margin-bottom: 0.5rem;
-
-        .eye {
-          width: 1.5rem;
-          height: 1.5rem;
-          background: white;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          .pupil {
-            width: 0.75rem;
-            height: 0.75rem;
-            background: var(--c-gray-800);
-            border-radius: 50%;
-          }
-        }
-      }
-
-      .smile {
-        width: 2rem;
-        height: 1rem;
-        border-bottom: 4px solid white;
-        border-radius: 0 0 50% 50%;
-      }
+      object-fit: cover;
     }
+  }
 
-    .tentacles {
-      position: absolute;
-      bottom: -0.75rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 0.25rem;
-      z-index: 1;
-
-      .tentacle {
-        width: 0.75rem;
-        height: 2rem;
-        background: linear-gradient(to bottom, var(--c-purple-600), var(--c-purple-500));
-        border-radius: 999px;
-        transform-origin: top center;
-        transform: rotate(calc((var(--i) - 3.5) * 8deg));
-      }
-    }
-
-    .sparkle-icon {
-      position: absolute;
-      top: -0.5rem;
-      right: -0.5rem;
-      font-size: 2rem;
-      color: #facc15;
-      z-index: 3;
-    }
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+    100% { transform: translateY(0px); }
   }
 
   .speech-bubble {
@@ -174,9 +121,9 @@
       }
 
       &.selected {
-        border-color: var(--c-purple-500);
-        background-color: var(--c-purple-50);
-        box-shadow: 0 4px 6px -1px rgba(168, 85, 247, 0.1);
+        border-color: var(--c-purple-600); /* Figma active state */
+        background-color: white;
+        box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.15);
 
         .check-icon {
           position: absolute;
@@ -282,20 +229,21 @@
 
   .btn-continue {
     width: 100%;
-    background: linear-gradient(to right, var(--c-purple-500), var(--c-purple-600));
+    background: linear-gradient(to right, var(--c-purple-600), var(--c-purple-700));
     color: white;
-    padding: 1rem;
-    border-radius: 1rem;
+    padding: 1.25rem;
+    border-radius: 9999px; /* pill shape */
     font-weight: 600;
-    font-size: 1rem;
+    font-size: 1.125rem;
     border: none;
     cursor: pointer;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s;
+    box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
-      box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.2);
-      opacity: 0.95;
+      box-shadow: 0 20px 25px -5px rgba(168, 85, 247, 0.4);
+      transform: scale(1.02);
+      background: linear-gradient(to right, var(--c-purple-700), var(--c-purple-800));
     }
 
     &:active {
@@ -303,7 +251,8 @@
     }
 
     &:disabled {
-      opacity: 0.5;
+      background: var(--c-gray-300);
+      opacity: 0.7;
       cursor: not-allowed;
       box-shadow: none;
       transform: none;

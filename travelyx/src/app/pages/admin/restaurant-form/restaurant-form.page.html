@@ -19,8 +19,17 @@
 
     <form (ngSubmit)="saveRestaurant()">
         <ion-item>
-            <ion-label position="stacked">Nombre del Restaurante</ion-label>
+            <ion-label position="stacked">Nombre del Restaurante / Lugar</ion-label>
             <ion-input [(ngModel)]="restaurant.nombre" name="nombre" placeholder="Ej. La Palapa Feliz"></ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="stacked">Tipo de Lugar</ion-label>
+            <ion-select [(ngModel)]="restaurant.tipo" name="tipo" placeholder="Selecciona uno">
+                <ion-select-option value="Restaurante">Restaurante</ion-select-option>
+                <ion-select-option value="Hotel">Hotel</ion-select-option>
+                <ion-select-option value="Zona Turística">Zona Turística</ion-select-option>
+            </ion-select>
         </ion-item>
 
         <ion-item>

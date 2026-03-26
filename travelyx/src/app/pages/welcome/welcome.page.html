@@ -1,46 +1,37 @@
-<ion-content [fullscreen]="true">
-    <div class="welcome-container">
-
-        <!-- Hero Section -->
-        <div class="hero-section">
-            <!-- Octopus Character (Reused) -->
-            <div class="octopus-container">
-                <div class="octopus-head">
-                    <div class="eyes">
-                        <div class="eye">
-                            <div class="pupil"></div>
-                        </div>
-                        <div class="eye">
-                            <div class="pupil"></div>
-                        </div>
-                    </div>
-                    <div class="smile"></div>
-                </div>
-                <div class="tentacles">
-                    <div class="tentacle" *ngFor="let i of [1,2,3,4,5,6]" [style.--i]="i"></div>
-                </div>
+<ion-content [fullscreen]="true" class="premium-glass-bg">
+    <div class="welcome-view relative-content">
+        
+        <div class="mascot-interactive-area" (click)="pokePolly()">
+            <div class="glass-speech-bubble bounce-in">
+                <p>{{ currentPhrase }}</p>
+                <div class="tail"></div>
             </div>
+            <img src="assets/polly.png" alt="Polly" class="floating-polly interactive">
+        </div>
 
+        <div class="glass-card mt-auto">
             <h1>Travelyx</h1>
-            <p>Tu guía turístico virtual en Progreso</p>
-        </div>
+            <h2>¿Qué buscas hoy?</h2>
+            <p class="subtitle">Selecciona una categoría para explorar Progreso</p>
 
-        <!-- Actions -->
-        <div class="actions-section">
-            <button class="btn-primary" (click)="startExperience()">
-                <span>Comenzar experiencia</span>
-                <ion-icon name="arrow-forward-outline"></ion-icon>
-            </button>
-
-            <div class="divider">
-                <span>o</span>
+            <div class="tiles-grid mt-4">
+                <button class="glass-tile" (click)="selectPlaceContext('Restaurante')">
+                    <ion-icon name="restaurant-outline"></ion-icon>
+                    <span>Restaurantes</span>
+                </button>
+                <button class="glass-tile" (click)="selectPlaceContext('Hotel')">
+                    <ion-icon name="bed-outline"></ion-icon>
+                    <span>Hoteles</span>
+                </button>
+                <button class="glass-tile full-width" (click)="selectPlaceContext('Zona Turística')">
+                    <ion-icon name="map-outline"></ion-icon>
+                    <span>Zonas Turísticas</span>
+                </button>
             </div>
 
-            <button class="btn-secondary" (click)="goToAdminLogin()">
-                <ion-icon name="storefront-outline"></ion-icon>
-                <span>Acceso Restaurantes</span>
+            <button class="btn-text-premium mt-6" (click)="goToAdminLogin()">
+                Portal de Administradores
             </button>
         </div>
-
     </div>
 </ion-content>

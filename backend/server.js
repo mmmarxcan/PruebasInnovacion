@@ -81,7 +81,7 @@ app.get('/api/categorias', (req, res) => {
 
 // POST: Crear Restaurante (Admin/Dueño)
 app.post('/api/restaurantes', (req, res) => {
-    const q = "INSERT INTO restaurantes (nombre, categoria, direccion, latitud, longitud, estado, ambiente) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id";
+    const q = "INSERT INTO restaurantes (nombre, categoria, direccion, latitud, longitud, estado, ambiente, tipo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id";
     const values = [
         req.body.nombre,
         req.body.categoria,
@@ -89,7 +89,8 @@ app.post('/api/restaurantes', (req, res) => {
         req.body.latitud,
         req.body.longitud,
         'pending', // Por defecto pendiente
-        req.body.ambiente
+        req.body.ambiente,
+        req.body.tipo || 'Restaurante'
     ];
 
     db.query(q, values, (err, result) => {
@@ -122,7 +123,7 @@ app.get('/api/restaurantes/:id', (req, res) => {
 
 // PUT: Actualizar Restaurante
 app.put('/api/restaurantes/:id', (req, res) => {
-    const q = "UPDATE restaurantes SET nombre=$1, categoria=$2, direccion=$3, telefono=$4, website=$5, foto_portada=$6, latitud=$7, longitud=$8, manual_cerrado=$9, ambiente=$10 WHERE id=$11";
+    const q = "UPDATE restaurantes SET nombre=$1, categoria=$2, direccion=$3, telefono=$4, website=$5, foto_portada=$6, latitud=$7, longitud=$8, manual_cerrado=$9, ambiente=$10, tipo=$11 WHERE id=$12";
     const values = [
         req.body.nombre,
         req.body.categoria,
@@ -134,6 +135,7 @@ app.put('/api/restaurantes/:id', (req, res) => {
         req.body.longitud,
         req.body.manual_cerrado,
         req.body.ambiente,
+        req.body.tipo || 'Restaurante',
         req.params.id
     ];
     db.query(q, values, (err, data) => {

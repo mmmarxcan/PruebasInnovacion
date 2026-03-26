@@ -3,10 +3,10 @@
         <ion-buttons slot="start">
             <ion-back-button defaultHref="/super-admin/dashboard"></ion-back-button>
         </ion-buttons>
-        <ion-title>Gestión de Restaurantes</ion-title>
+        <ion-title>Gestión de Lugares</ion-title>
     </ion-toolbar>
     <ion-toolbar color="primary">
-        <ion-searchbar (ionInput)="filterList($event)" placeholder="Buscar restaurante..."></ion-searchbar>
+        <ion-searchbar (ionInput)="filterList($event)" placeholder="Buscar lugar..."></ion-searchbar>
     </ion-toolbar>
     <ion-toolbar color="primary">
         <ion-segment [(ngModel)]="selectedSegment" (ionChange)="onSegmentChange()">
@@ -30,7 +30,7 @@
                 <img [src]="restaurant.foto_portada || 'https://ionicframework.com/docs/img/demos/avatar.svg'" />
             </ion-avatar>
             <ion-label>
-                <h2>{{ restaurant.nombre }}</h2>
+                <h2>{{ restaurant.nombre }} <ion-badge color="secondary" style="margin-left:8px;">{{ restaurant.tipo || 'Restaurante' }}</ion-badge></h2>
                 <p>{{ restaurant.categoria }}</p>
                 <p><small>{{ restaurant.direccion }}</small></p>
             </ion-label>
